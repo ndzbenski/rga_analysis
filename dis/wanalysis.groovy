@@ -15,6 +15,7 @@ double enmax = en+0.1; //GeV
 double thetamax = 40;  //degrees
 double phimax = 180;   //degrees
 double vzmax = 50;
+double wmin = 1.8;
 double wmax = 0;
 if(en > 7){wmax = 4.5;}
 else if(en > 4){wmax = 4;}
@@ -22,38 +23,46 @@ else {wmax = 2.5;}
 
 HipoDataSource reader = new HipoDataSource();
 
-H1F momentum = new H1F("momentum", "momentum", 500, 0, 10);
-momentum.setTitleX("momentum");
+// The 1D histos
+H1F momentum = new H1F("momentum", "momentum", 500, 0, 11);
+momentum.setTitleX("momentum [GeV]");
 
-H1F W_hist = new H1F("W", "W", 500, 0, wmax);
-W_hist.setTitleX("W");
+H1F W_hist = new H1F("W", "W", 500, wmin, wmax);
+W_hist.setTitleX("W [GeV]");
 
-H1F Q2_hist = new H1F("Q2", "Q2", 50, 0, 10);
-Q2_hist.setTitleX("Q2");
+H1F Q2_hist = new H1F("Q2", "Q2", 50, 0, 13);
+Q2_hist.setTitleX("Q^2 [GeV^2]");
 
-H1F xB_hist = new H1F("xB", "xB", 50, 0, 1);
+H1F xB_hist = new H1F("xB", "xB", 50, 0, 0.9);
 xB_hist.setTitleX("xB");
 
-H2F W_vs_Q2 = new H2F("W_vs_Q2", "W_vs_Q2", 500, 0.0, enmax, 500, 0.0, wmax);
-W_vs_Q2.setTitleX("Q2");
-W_vs_Q2.setTitleY("W");
+H1F xsection_hist = new H1F("xsection", "Generating Cross Section (#sigma)", 50, -1, 80);
+xsection_hist.setTitleX("#sigma_{gen}");
 
-H2F E_vs_Theta = new H2F("E_vs_Theta", "E_vs_Theta", 500, 5, thetamax, 500, 0, enmax);
-E_vs_Theta.setTitleX("Theta");
-E_vs_Theta.setTitleY("E'");
+// 2D Histos
+H2F Q2_vs_W = new H2F("Q2_vs_W", "Q2 vs W", 500, wmin, wmax, 500, 0.0, 13);
+Q2_vs_W.setTitleX("W [GeV]");
+Q2_vs_W.setTitleY("Q^2 [GeV^2]");
 
-H2F Q2_vs_xB = new H2F("Q2_vs_xB", "Q2_vs_xB", 500, 0, 1, 500, 0, 15);
+H2F E_vs_Theta = new H2F("E_vs_Theta", "E' vs Theta", 500, 5, thetamax+1, 500, 0, enmax);
+E_vs_Theta.setTitleX("Theta [deg]");
+E_vs_Theta.setTitleY("E' [GeV]");
+
+H2F Q2_vs_xB = new H2F("Q2_vs_xB", "Q2 vs xB", 500, 0, 1, 500, 0, 13);
 Q2_vs_xB.setTitleX("xB");
-Q2_vs_xB.setTitleY("Q2");
+Q2_vs_xB.setTitleY("Q^2 [GeV^2]");
 
-
-H2F W_vs_xB = new H2F("W_vs_xB", "W_vs_xB", 500, 0, 1, 500, 0, wmax);
+H2F W_vs_xB = new H2F("W_vs_xB", "W vs xB", 500, 0, 0.81, 500, wmin, wmax);
 W_vs_xB.setTitleX("xB");
-W_vs_xB.setTitleY("W");
+W_vs_xB.setTitleY("W [GeV]");
 
-H2F Phi_vs_W = new H2F("Phi_vs_W", "Phi_vs_W", 500, 0, wmax, 500, -phimax, phimax);
-Phi_vs_W.setTitleX("W");
-Phi_vs_W.setTitleY("Phi");
+H2F Phi_vs_W = new H2F("Phi_vs_W", "Phi_vs_W", 500, wmin, wmax, 500, -phimax, phimax);
+Phi_vs_W.setTitleX("W [GeV]");
+Phi_vs_W.setTitleY("Phi [deg]");
+
+H2F xsect_vs_xB = new H2F("xsect_vs_xB", "generating #sigma vs xB", 500, 0.0, 0.81, 500, -1, 150);
+xsect_vs_xB.setTitleX("xB");
+xsect_vs_xB.setTitleY("#sigma");
 
 
 double e_mass = 0.000511;
@@ -93,8 +102,7 @@ new File('/work/clas12/nated/dis.cooked/', args[0]).eachLine { line ->
             DataBank bank_mcEvent = event.getBank("MC::Event");
             
             for (int k = 0; k < bank_rec.rows(); k++) {
-    
-    
+   
                 float weight = bank_mcEvent.getFloat("weight", 0);
     
                 int pid = bank_rec.getInt("pid", k);
@@ -120,91 +128,96 @@ new File('/work/clas12/nated/dis.cooked/', args[0]).eachLine { line ->
                 LorentzVector e_vec_prime = new LorentzVector(); //4 vector e'
                 e_vec_prime.setVectM(e_vec_3, e_mass);
     
-                if(e_vec_prime.e() < 0.1 * en){continue;} //cut below 10% beam
-                if(theta < 5 || theta > 40){continue;} //cut outside of 5 and 40 degrees for FD
+                // ---------------- Cut on E' and theta -------------------
+                if(e_vec_prime.e() < 0.1 * en){continue;}  //cut below 10% beam
+                if(theta < 5 || theta > 40){continue;}     //cut outside of 5 and 40 degrees for FD
+                // --------------------------------------------------------
 
-                // Fill Histograms
                 momentum.fill(mom);
                 LorentzVector q_vec = new LorentzVector(); //4 vector q
                 q_vec.copy(e_vec); //e - e'
                 q_vec.sub(e_vec_prime);
                 double Q2 = -q_vec.mass2(); //-q^2
                 
-    
                 LorentzVector w_vec = new LorentzVector(); //4 vector used to calculate W
                 w_vec.copy(p_vec); //p + q
                 w_vec.add(q_vec);
                 double W = w_vec.mass();
+                //double W = p_mass*p_mass + 2.0*p_mass*(en-E_prime) -Q2
     
-                // xB = Q^2/2M_p(E-E')
-                double E_prime = Q2/(4.0*en*(Math.sin(theta*Math.PI/360.0)));
+                //double E_prime = Q2/(4.0*en*(Math.sin(theta*Math.PI/360.0)));
+                double E_prime = e_vec_prime.e();
                 double xB = Q2/(2.0*p_mass*(en-E_prime));
                 
-                // Make cut on W < 2 MeV/c^2
-                if(W < 2) continue;
-    
-                //double W = p_mass*p_mass + 2.0*p_mass*(en-E_prime) -Q2
+                // ------------------------ Cuts --------------------------
+                if(W < 2) continue;                    // cut below 2 GeV/c^2
+                
+                // --------------------------------------------------------
+                
+                // Fill histos
                 Q2_hist.fill(Q2);
                 xB_hist.fill(xB);
                 W_hist.fill(W);
-                W_vs_Q2.fill(Q2,W);
+                xsection_hist.fill(weight);
+                
+                Q2_vs_W.fill(W,Q2);
                 Phi_vs_W.fill(W,phi);
+                E_vs_Theta.fill(theta,e_vec_prime.e()); // check this with calculated E'
+                Q2_vs_xB.fill(xB,Q2);
+                W_vs_xB.fill(xB,W);
+                //if (Q2>1 && Q2 <3) 
+                xsect_vs_xB.fill(xB,weight);
     
-                if(e_vec_prime.e()>emax){emax = e_vec_prime.e();} //calculate max values of each param
+                // Calculate max values of each param
+                if(e_vec_prime.e()>emax){emax = e_vec_prime.e();} 
                 if(theta > thetamax){thetamax = theta;}
                 if(phi > phimax){phimax = phi;}
                 if(vz > vzmax){vzmax = vz;}
-    
-                E_vs_Theta.fill(theta,e_vec_prime.e());
-                Q2_vs_xB.fill(xB,Q2);
-                W_vs_xB.fill(xB,W);
-    
-    
+
             } // end for
         } // end if
     } // end while
 } // end open file
 
-
-TCanvas can2 = new TCanvas("can", 800, 600);
-can2.draw(Q2_hist);
-can2.save("figs/Q2.png");
-
-TCanvas can3 = new TCanvas("can", 800, 600);
-can3.draw(W_hist);
-can3.save("figs/W.png");
-
-TCanvas can8 = new TCanvas("can", 800, 600);
-can8.draw(xB_hist);
-can8.save("figs/xB.png");
-
-
 TCanvas can = new TCanvas("can", 800, 600);
-can.draw(W_vs_Q2);
-can.save("figs/W_vs_Q2.png");
-
+can.draw(xsection_hist);
+can.save("figs/xsection.png");
 
 TCanvas can1 = new TCanvas("can", 800, 600);
-can1.draw(momentum);
-can1.save("figs/mom.png");
+can1.draw(Q2_hist);
+can1.save("figs/Q2.png");
+
+TCanvas can2 = new TCanvas("can", 800, 600);
+can2.draw(W_hist);
+can2.save("figs/W.png");
+
+TCanvas can3 = new TCanvas("can", 800, 600);
+can3.draw(xB_hist);
+can3.save("figs/xB.png");
 
 TCanvas can4 = new TCanvas("can", 800, 600);
-can4.draw(E_vs_Theta);
-can4.save("figs/EvsTheta.png");
+can4.draw(momentum);
+can4.save("figs/mom.png");
 
 TCanvas can5 = new TCanvas("can", 800, 600);
-can5.draw(Q2_vs_xB);
-can5.save("figs/Q2_vs_xB.png");
-
+can5.draw(Q2_vs_W);
+can5.save("figs/Q2_vs_W.png");
 
 TCanvas can6 = new TCanvas("can", 800, 600);
-can6.draw(W_vs_xB);
-can6.save("figs/W_vs_xB.png");
+can6.draw(E_vs_Theta);
+can6.save("figs/EvsTheta.png");
 
-/*
 TCanvas can7 = new TCanvas("can", 800, 600);
-can7.draw(Phi_vs_W);
-can7.save("figs/PhivsW.png"); */
+can7.draw(Q2_vs_xB);
+can7.save("figs/Q2_vs_xB.png");
+
+TCanvas can8 = new TCanvas("can", 800, 600);
+can8.draw(W_vs_xB);
+can8.save("figs/W_vs_xB.png");
+
+TCanvas can9 = new TCanvas("can", 800, 600);
+can9.draw(xsect_vs_xB);
+can9.save("figs/xsect_vs_xB.png");
 
 
 
