@@ -16,7 +16,7 @@ double enmax = en+0.1; //GeV
 double thetamax = 40;  //degrees
 double phimax = 180;   //degrees
 double vzmax = 50;
-double wmin = 1.8;
+double wmin = 0;
 double wmax = 0;
 if(en > 7){wmax = 4.5;}
 else if(en > 4){wmax = 4;}
@@ -34,6 +34,16 @@ phi_hist_gen.setTitleX("phi_gen [deg]");
 H1F mom_hist_gen = new H1F("gen momentum", "gen momentum", 500, 0, 11);
 mom_hist_gen.setTitleX("momentum_gen [GeV]");
 
+H1F W_hist_gen = new H1F("W_gen", "W_gen", 500, wmin, wmax+0.5);
+W_hist_gen.setTitleX("W_gen [GeV]");
+
+H1F Q2_hist_gen = new H1F("Q2_gen", "Q2_gen", 50, 0, 13);
+Q2_hist_gen.setTitleX("Q^2 gen [GeV^2]");
+
+H1F xB_hist_gen = new H1F("xB_gen", "xB_gen", 100, 0, 1);
+xB_hist_gen.setTitleX("xB_gen");
+
+
 // The reconstructed 1D histos 
 H1F theta_hist = new H1F("theta", "theta", 500, 0, thetamax+5);
 theta_hist.setTitleX("theta [deg]");
@@ -44,7 +54,7 @@ phi_hist.setTitleX("phi [deg]");
 H1F momentum = new H1F("momentum", "momentum", 500, 0, 11);
 momentum.setTitleX("momentum [GeV]");
 
-H1F W_hist = new H1F("W", "W", 500, 0, wmax+0.5);
+H1F W_hist = new H1F("W", "W", 500, wmin, wmax+0.5);
 W_hist.setTitleX("W [GeV]");
 
 H1F Q2_hist = new H1F("Q2", "Q2", 50, 0, 13);
@@ -53,8 +63,8 @@ Q2_hist.setTitleX("Q^2 [GeV^2]");
 H1F Eprime_hist = new H1F("Eprime", "E'", 50, 0, 13);
 Eprime_hist.setTitleX("E' [GeV]");
 
-// H1F xB_hist = new H1F("xB", "xB", 100, 0, 0.9);
-//xB_hist.setTitleX("xB");
+H1F xB_hist = new H1F("xB", "xB", 100, 0, 1);
+xB_hist.setTitleX("xB");
 
 // Create multiple histograms for each Q2 bin 
 HashMap<Integer,H1F> xB_histmap = new HashMap<Integer,H1F>();
@@ -74,6 +84,14 @@ phi_hist_res.setTitleX("#Delta phi [deg]");
 H1F mom_hist_res = new H1F("momentum_res", "momentum_res", 500, -1, 1);
 mom_hist_res.setTitleX("#Delta p [GeV]");
 
+H1F W_hist_res = new H1F("W_res", "W_res", 500, -1, 1);
+W_hist_res.setTitleX("W_res [GeV]");
+
+H1F Q2_hist_res = new H1F("Q2_res", "Q2_res", 500, -1, 1);
+Q2_hist_res.setTitleX("Q^2_res [GeV^2]");
+
+H1F xB_hist_res = new H1F("xB_res", "xB_res", 100, -1, 1);
+xB_hist_res.setTitleX("xB_res");
 
 
 // 2D Histos
@@ -183,6 +201,23 @@ new File('/work/clas12/nated/dis.cooked/', args[0]).eachLine { line ->
                 phi_gen = Math.atan2((double) py_gen,(double) px_gen);
                 theta_gen = Math.acos((double) pz_gen/(double) mom_gen);
                 
+                Vector3 e_vec_3_gen = new Vector3(px_gen, py_gen, pz_gen); //3 vector e'
+                LorentzVector e_vec_prime_gen = new LorentzVector(); //4 vector e'
+                e_vec_prime_gen.setVectM(e_vec_3_gen, e_mass);
+                
+                LorentzVector q_vec_gen = new LorentzVector(); //4 vector q
+                q_vec_gen.copy(e_vec); //e - e'
+                q_vec_gen.sub(e_vec_prime_gen);
+                Q2_gen = -q_vec_gen.mass2(); //-q^2
+                
+                LorentzVector w_vec_gen = new LorentzVector(); //4 vector used to calculate W
+                w_vec_gen.copy(p_vec); //p + q
+                w_vec_gen.add(q_vec_gen);
+                W_gen = w_vec_gen.mass();
+                
+                E_prime_gen = e_vec_prime_gen.e();
+                xB_gen = Q2_gen/(2.0*p_mass*(en-E_prime_gen));
+                
                 theta_gen *= 180/Math.PI;
                 phi_gen *= 180/Math.PI;
                 
@@ -191,6 +226,9 @@ new File('/work/clas12/nated/dis.cooked/', args[0]).eachLine { line ->
                 phi_hist_gen.fill(phi_gen);
                 mom_hist_gen.fill(mom_gen);
                 
+                W_hist_gen.fill(W_gen);
+                Q2_hist_gen.fill(Q2_gen);
+                xB_hist_gen.fill(xB_gen);
             }
             
         }
@@ -244,6 +282,24 @@ new File('/work/clas12/nated/dis.cooked/', args[0]).eachLine { line ->
                 // pick electrons
                 //if (pid != 11) continue;
                 if(q != -1) continue;
+                
+                Vector3 e_vec_3_gen = new Vector3(px_gen, py_gen, pz_gen); //3 vector e'
+                LorentzVector e_vec_prime_gen = new LorentzVector(); //4 vector e'
+                e_vec_prime_gen.setVectM(e_vec_3_gen, e_mass);
+                
+                LorentzVector q_vec_gen = new LorentzVector(); //4 vector q
+                q_vec_gen.copy(e_vec); //e - e'
+                q_vec_gen.sub(e_vec_prime_gen);
+                Q2_gen = -q_vec_gen.mass2(); //-q^2
+                
+                LorentzVector w_vec_gen = new LorentzVector(); //4 vector used to calculate W
+                w_vec_gen.copy(p_vec); //p + q
+                w_vec_gen.add(q_vec_gen);
+                W_gen = w_vec_gen.mass();
+                
+                E_prime_gen = e_vec_prime_gen.e();
+                xB_gen = Q2_gen/(2.0*p_mass*(en-E_prime_gen));
+                
     
                 Vector3 e_vec_3 = new Vector3(px, py, pz); //3 vector e'
                 LorentzVector e_vec_prime = new LorentzVector(); //4 vector e'
@@ -269,6 +325,8 @@ new File('/work/clas12/nated/dis.cooked/', args[0]).eachLine { line ->
                 //double E_prime = Q2/(4.0*en*(Math.sin(theta*Math.PI/360.0)));
                 E_prime = e_vec_prime.e();
                 xB = Q2/(2.0*p_mass*(en-E_prime));
+                
+                xB_hist.fill(xB);
                 
                 // ------------------------ Cuts --------------------------
                 //if(W < 2) continue;                    // cut below 2 GeV/c^2
@@ -312,6 +370,10 @@ new File('/work/clas12/nated/dis.cooked/', args[0]).eachLine { line ->
                 theta_hist_res.fill(theta_gen-theta);
                 phi_hist_res.fill(phi_gen-phi);
                 mom_hist_res.fill(mom_gen-mom);
+                
+                W_hist_res.fill(W_gen-W);
+                Q2_hist_res.fill(Q2_gen-Q2);
+                xB_hist_res.fill(xB_gen-xB);
 
             } // end for
         } // end if
@@ -353,20 +415,39 @@ can_1d.draw(mom_hist_res);
 //}
 can_1d.save("figs/uncut/1D_spectra.png");
 
-//TCanvas can_ = new TCanvas("can", 1100, 600);
+TCanvas can_1d_b = new TCanvas("can", 1100, 600);
+can_1d_b.setTitle("W, Q2, xB resolutions");
+can_1d_b.divide(3,3);
+can_1d_b.cd(0);
+can_1d_b.draw(W_hist_gen);
+can_1d_b.cd(1);
+can_1d_b.draw(Q2_hist_gen);
+can_1d_b.cd(2);
+can_1d_b.draw(xB_hist_gen);
+can_1d_b.cd(3);
+can_1d_b.draw(W_hist); 
+can_1d_b.cd(4);
+can_1d_b.draw(Q2_hist);
+can_1d_b.cd(5);
+can_1d_b.draw(xB_hist);
+can_1d_b.cd(6);
+can_1d_b.draw(W_hist_res);
+can_1d_b.cd(7);
+can_1d_b.draw(Q2_hist_res);
+can_1d_b.cd(8);
+can_1d_b.draw(xB_hist_res);
+can_1d_b.save("figs/uncut/1D_kin_spectra.png");
 
 TCanvas can_2d = new TCanvas("can", 1100, 600);
-can_2d.divide(3,2);
-can_2d.cd(1);
+can_2d.divide(2,2);
+can_2d.cd(0);
 can_2d.draw(Q2_vs_W);
-can_2d.cd(2);
+can_2d.cd(1);
 can_2d.draw(E_vs_Theta);
-can_2d.cd(3);
+can_2d.cd(2);
 can_2d.draw(Q2_vs_xB);
-can_2d.cd(4);
+can_2d.cd(3);
 can_2d.draw(W_vs_xB);
-can_2d.cd(5);
-can_2d.draw(xsect_vs_xB);
 can_2d.save("figs/uncut/2d_spectra.png");
 
 /*
