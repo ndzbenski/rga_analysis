@@ -413,7 +413,7 @@ can_1d.draw(mom_hist_res);
     //can.getPad().setLegendPosition(20, 20);
     //legend.AddEntry(xB_histmap.get(k),"Q2 < " + 1*k+1,"l");
 //}
-can_1d.save("figs/uncut/1D_spectra.png");
+can_1d.save("figs/uncut/1D_angle_spectra.png");
 
 TCanvas can_1d_b = new TCanvas("can", 1100, 600);
 can_1d_b.setTitle("W, Q2, xB resolutions");
