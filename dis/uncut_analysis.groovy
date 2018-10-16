@@ -82,7 +82,7 @@ H1F phi_hist_res = new H1F("phi_res", "phi_res", 500, -10, 10);
 phi_hist_res.setTitleX("#Delta phi [deg]");
 
 H1F mom_hist_res = new H1F("momentum_res", "momentum_res", 500, -1, 1);
-mom_hist_res.setTitleX("#Delta p [GeV]");
+mom_hist_res.setTitleX("#Deltap/p [GeV]");
 
 H1F W_hist_res = new H1F("W_res", "W_res", 500, -1, 1);
 W_hist_res.setTitleX("W_res [GeV]");
@@ -341,10 +341,7 @@ new File('/work/clas12/nated/dis.cooked/', args[0]).eachLine { line ->
                 for(int j = 0; j < 8; j++){
                     Q2_bin_min = 0;
                     Q2_bin_max = 1*j + 1.0;
-                    if(Q2 < Q2_bin_max) {
-                        xB_histmap.get(j).fill(xB);
-                        
-                    }
+                    if(Q2 < Q2_bin_max) { xB_histmap.get(j).fill(xB); }
                     else {continue;}
                 }
                 
@@ -355,10 +352,9 @@ new File('/work/clas12/nated/dis.cooked/', args[0]).eachLine { line ->
                 
                 Q2_vs_W.fill(W,Q2);
                 Phi_vs_W.fill(W,phi);
-                E_vs_Theta.fill(theta,e_vec_prime.e()); // check this with calculated E'
+                E_vs_Theta.fill(theta,e_vec_prime.e());
                 Q2_vs_xB.fill(xB,Q2);
                 W_vs_xB.fill(xB,W);
-                //if (Q2>1 && Q2 <3) 
                 xsect_vs_xB.fill(xB,weight);
     
                 // Calculate max values of each param
@@ -369,7 +365,7 @@ new File('/work/clas12/nated/dis.cooked/', args[0]).eachLine { line ->
                 
                 theta_hist_res.fill(theta_gen-theta);
                 phi_hist_res.fill(phi_gen-phi);
-                mom_hist_res.fill(mom_gen-mom);
+                mom_hist_res.fill((mom_gen-mom)/mom_gen);
                 
                 W_hist_res.fill(W_gen-W);
                 Q2_hist_res.fill(Q2_gen-Q2);
