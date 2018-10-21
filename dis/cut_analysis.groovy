@@ -90,36 +90,36 @@ H2F W_vs_xB = new H2F("W_vs_xB", "W vs xB", 500, 0, 0.81, 500, wmin, wmax+0.5);
 W_vs_xB.setTitleX("xB");
 W_vs_xB.setTitleY("W [GeV]");
 
-H2F Phi_vs_W = new H2F("Phi_vs_W", "Phi_vs_W", 500, wmin, wmax, 500, -phimax, phimax);
+H2F Phi_vs_W = new H2F("Phi_vs_W", "Phi_vs_W", 150, wmin, wmax, 500, -phimax, phimax);
 Phi_vs_W.setTitleX("W [GeV]");
 Phi_vs_W.setTitleY("Phi [deg]");
 
-H2F xsect_vs_xB = new H2F("xsect_vs_xB", "generating #sigma vs xB", 500, 0.0, 0.81, 500, -1, 150);
+H2F xsect_vs_xB = new H2F("xsect_vs_xB", "generating #sigma vs xB", 150, 0.0, 0.81, 500, -1, 150);
 xsect_vs_xB.setTitleX("xB");
 xsect_vs_xB.setTitleY("#sigma");
 
 
 // For pre-fiducial cuts
-H2F Cal_y_vs_x_precut = new H2F("Cal_y_vs_x_precut", "Cal_y_vs_x_precut", 500, -450,450, 500, -450,450);
+H2F Cal_y_vs_x_precut = new H2F("Cal_y_vs_x_precut", "Cal_y_vs_x_precut", 150, -450,450, 500, -450,450);
 Cal_y_vs_x_precut.setTitleX("X [cm]");
 Cal_y_vs_x_precut.setTitleY("Y [cm]");
 
-H1F Cal_lu_precut = new H1F("Cal_lu", "Cal_lu_precut", 500, 0, 450);
+H1F Cal_lu_precut = new H1F("Cal_lu", "Cal_lu_precut", 150, 0, 450);
 Cal_lu_precut.setTitleX("Cal_lu_precut [cm]");
-H1F Cal_lv_precut = new H1F("Cal_lv", "Cal_lv_precut", 500, 0, 450);
+H1F Cal_lv_precut = new H1F("Cal_lv", "Cal_lv_precut", 150, 0, 450);
 Cal_lv_precut.setTitleX("Cal_lv_precut [cm]");
-H1F Cal_lw_precut = new H1F("Cal_lw", "Cal_lw_precut", 500, 0, 450);
+H1F Cal_lw_precut = new H1F("Cal_lw", "Cal_lw_precut", 150, 0, 450);
 Cal_lw_precut.setTitleX("Cal_lw_precut [cm]");
 
 // fiducial cuts
-H1F Cal_lu = new H1F("Cal_lu", "Cal_lu", 500, 0, 450);
+H1F Cal_lu = new H1F("Cal_lu", "Cal_lu", 150, 0, 450);
 Cal_lu.setTitleX("Cal_lu_cut [cm]");
-H1F Cal_lv = new H1F("Cal_lv", "Cal_lv", 500, 0, 450);
+H1F Cal_lv = new H1F("Cal_lv", "Cal_lv", 150, 0, 450);
 Cal_lv.setTitleX("Cal_lv_cut [cm]");
-H1F Cal_lw = new H1F("Cal_lw", "Cal_lw", 500, 0, 450);
+H1F Cal_lw = new H1F("Cal_lw", "Cal_lw", 150, 0, 450);
 Cal_lw.setTitleX("Cal_lw_cut [cm]");
 
-H2F Cal_y_vs_x = new H2F("Cal_y_vs_x", "Cal_y_vs_x", 500, -450,450, 500, -450, 450);
+H2F Cal_y_vs_x = new H2F("Cal_y_vs_x", "Cal_y_vs_x", 150, -450,450, 500, -450, 450);
 Cal_y_vs_x.setTitleX("X [cm]");
 Cal_y_vs_x.setTitleY("Y [cm]");
 
