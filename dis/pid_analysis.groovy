@@ -23,6 +23,22 @@ else {wmax = 2.5;}
 
 HipoDataSource reader = new HipoDataSource();
 
+// 1D spectra
+H1F h_eprime = new H1F("h_eprime", "E' spectra", 20,0,9);
+h_eprime.setTitleX("E' [GeV]");
+
+H1F h_epcal = new H1F("h_epcal", "E_{PCAL} spectra", 50,0,2);
+h_epcal.setTitleX("E_{pcal} [GeV]");
+
+H1F h_ecin = new H1F("h_ecin", "E_{ECin}", 50,0,1);
+h_ecin.setTitleX("E_{ECin} [GeV]");
+
+H1F h_ecout = new H1F("h_ecout", "E_{ECout}", 50,0,0.2);
+h_ecout.setTitleX("E_{ECout} [GeV]");
+
+H1F h_ectot = new H1F("h_ectot", "E_{ECtot}", 50,0,1.5);
+h_ectot.setTitleX("E_{ECtot} [GeV]");
+
 H1F h_nphe = new H1F("h_nphe", "Number of photoelectrons", 50,0,50);
 h_nphe.setTitleX("nphe");
 
@@ -158,6 +174,8 @@ new File('/work/clas12/nated/dis.cooked/', args[0]).eachLine { line ->
                 
                 //System.out.println("k index: " + k + ", cal row index: " + cal_row);
                 
+                h_eprime.fill(E_prime);
+                
                 // Calorimeter cuts
                 if(cal_row != -1){
                     float e_pcal = 0;
@@ -186,6 +204,11 @@ new File('/work/clas12/nated/dis.cooked/', args[0]).eachLine { line ->
                                 
                             }
                             float ec_tot = ec_in + ec_out;
+                            
+                            h_epcal.fill(e_pcal);
+                            h_ecin.fill(ec_in);
+                            h_ecout.fill(ec_out);
+                            h_ectot.fill(ec_tot);
                             
                             EC_vs_PCAL.fill(e_pcal, ec_tot);
                             Etot_vs_p.fill(mom, ec_tot/mom);
@@ -244,6 +267,24 @@ int dc_cut_row(DataEvent event, int row){
     return cal_row_match;
 }
 
+TCanvas can = new TCanvas("can", 1100, 800);
+can.setTitle("Energy spectra");
+can.divide(3,2);
+can.cd(0);
+can.draw(h_eprime);
+can.cd(1);
+can.draw(h_epcal);
+can.cd(2);
+can.draw(h_ecin);
+can.cd(3);
+can.draw(h_ecout);
+can.cd(4);
+can.draw(h_ectot);
+can.cd(5);
+can.draw(h_nphe);
+can.save("figs/pid/energy_spectra.png");
+
+
 TCanvas can1 = new TCanvas("can1", 800, 600);
 can1.setTitle("E_{tot} vs E_{PCAL}");
 can1.draw(EC_vs_PCAL);
@@ -253,8 +294,3 @@ TCanvas can2 = new TCanvas("can2", 800, 600);
 can2.setTitle("E_{tot}/p vs p");
 can2.draw(Etot_vs_p);
 can2.save("figs/pid/Etot_vs_p.png");
-
-TCanvas can3 = new TCanvas("can3", 800, 600);
-can3.setTitle("Number of photoelectrons");
-can3.draw(h_nphe);
-can3.save("figs/pid/nphe.png");
