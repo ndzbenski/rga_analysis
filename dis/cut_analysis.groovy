@@ -24,16 +24,16 @@ else {wmax = 2.5;}
 HipoDataSource reader = new HipoDataSource();
 
 // The reconstructed 1D histos 
-H1F theta_hist = new H1F("theta", "theta", 500, 0, thetamax+5);
+H1F theta_hist = new H1F("theta", "theta", 50, 0, thetamax+5);
 theta_hist.setTitleX("theta [deg]");
 
-H1F phi_hist = new H1F("phi", "phi", 500, -phimax, phimax);
+H1F phi_hist = new H1F("phi", "phi", 100, -phimax, phimax);
 phi_hist.setTitleX("phi [deg]");
 
-H1F momentum = new H1F("momentum", "momentum", 500, 0, 11);
+H1F momentum = new H1F("momentum", "momentum", 20, 0, 11);
 momentum.setTitleX("momentum [GeV]");
 
-H1F W_hist = new H1F("W", "W", 500, wmin, wmax+0.5);
+H1F W_hist = new H1F("W", "W", 100, wmin, wmax+0.5);
 W_hist.setTitleX("W [GeV]");
 
 H1F Q2_hist = new H1F("Q2", "Q2", 50, 0, 13);
@@ -42,7 +42,7 @@ Q2_hist.setTitleX("Q^2 [GeV^2]");
 H1F Eprime_hist = new H1F("Eprime", "E'", 50, 0, 13);
 Eprime_hist.setTitleX("E' [GeV]");
 
-H1F xB_hist = new H1F("xB", "xB", 100, 0, 1);
+H1F xB_hist = new H1F("xB", "xB", 20, 0, 1);
 xB_hist.setTitleX("xB");
 
 // Create multiple histograms for each Q2 bin 
@@ -54,39 +54,39 @@ xsection_hist.setTitleX("#sigma_{gen}");
 
 
 // The 1D histos cuts
-H1F theta_hist_cut = new H1F("theta_cut", "theta_cut", 500, 0, thetamax+5);
-theta_hist_cut.setTitleX("#Delta theta [deg]");
+H1F theta_hist_cut = new H1F("theta_cut", "theta_cut", 50, 0, thetamax+5);
+theta_hist_cut.setTitleX("theta [deg]");
 
-H1F phi_hist_cut = new H1F("phi_cut", "phi_cut", 500, -phimax, phimax);
-phi_hist_cut.setTitleX("#Delta phi [deg]");
+H1F phi_hist_cut = new H1F("phi_cut", "phi_cut", 100, -phimax, phimax);
+phi_hist_cut.setTitleX("phi [deg]");
 
-H1F mom_hist_cut = new H1F("momentum_cut", "momentum_cut", 500, 0, 11);
-mom_hist_cut.setTitleX("#Delta p [GeV]");
+H1F mom_hist_cut = new H1F("momentum_cut", "momentum_cut", 20, 0, 11);
+mom_hist_cut.setTitleX("p [GeV]");
 
-H1F W_hist_cut = new H1F("W_cut", "W_cut", 500, wmin, wmax+0.5);
+H1F W_hist_cut = new H1F("W_cut", "W_cut", 100, wmin, wmax+0.5);
 W_hist_cut.setTitleX("W_cut [GeV]");
 
-H1F Q2_hist_cut = new H1F("Q2_cut", "Q2_cut", 500, 0, 13);
+H1F Q2_hist_cut = new H1F("Q2_cut", "Q2_cut", 100, 0, 13);
 Q2_hist_cut.setTitleX("Q^2_cut [GeV^2]");
 
-H1F xB_hist_cut = new H1F("xB_cut", "xB_cut", 100, 0, 1);
+H1F xB_hist_cut = new H1F("xB_cut", "xB_cut", 20, 0, 1);
 xB_hist_cut.setTitleX("xB_cut");
 
 
 // 2D Histos
-H2F Q2_vs_W = new H2F("Q2_vs_W", "Q2 vs W", 500, wmin, wmax+0.5, 500, 0.0, 13);
+H2F Q2_vs_W = new H2F("Q2_vs_W", "Q2 vs W", 100, wmin, wmax+0.5, 100, 0.0, 13);
 Q2_vs_W.setTitleX("W [GeV]");
 Q2_vs_W.setTitleY("Q^2 [GeV^2]");
 
-H2F E_vs_Theta = new H2F("E_vs_Theta", "E' vs Theta", 500, 5, thetamax+5, 500, 0, enmax);
+H2F E_vs_Theta = new H2F("E_vs_Theta", "E' vs Theta", 100, 5, thetamax+5, 100, 0, enmax);
 E_vs_Theta.setTitleX("Theta [deg]");
 E_vs_Theta.setTitleY("E' [GeV]");
 
-H2F Q2_vs_xB = new H2F("Q2_vs_xB", "Q2 vs xB", 500, 0, 1, 500, 0, 13);
+H2F Q2_vs_xB = new H2F("Q2_vs_xB", "Q2 vs xB", 100, 0, 1, 100, 0, 13);
 Q2_vs_xB.setTitleX("xB");
 Q2_vs_xB.setTitleY("Q^2 [GeV^2]");
 
-H2F W_vs_xB = new H2F("W_vs_xB", "W vs xB", 500, 0, 0.81, 500, wmin, wmax+0.5);
+H2F W_vs_xB = new H2F("W_vs_xB", "W vs xB", 100, 0, 0.81, 100, wmin, wmax+0.5);
 W_vs_xB.setTitleX("xB");
 W_vs_xB.setTitleY("W [GeV]");
 
@@ -94,32 +94,32 @@ H2F Phi_vs_W = new H2F("Phi_vs_W", "Phi_vs_W", 150, wmin, wmax, 500, -phimax, ph
 Phi_vs_W.setTitleX("W [GeV]");
 Phi_vs_W.setTitleY("Phi [deg]");
 
-H2F xsect_vs_xB = new H2F("xsect_vs_xB", "generating #sigma vs xB", 150, 0.0, 0.81, 500, -1, 150);
+H2F xsect_vs_xB = new H2F("xsect_vs_xB", "generating #sigma vs xB", 150, 0.0, 0.81, 150, -1, 150);
 xsect_vs_xB.setTitleX("xB");
 xsect_vs_xB.setTitleY("#sigma");
 
 
 // For pre-fiducial cuts
-H2F Cal_y_vs_x_precut = new H2F("Cal_y_vs_x_precut", "Cal_y_vs_x_precut", 150, -450,450, 500, -450,450);
+H2F Cal_y_vs_x_precut = new H2F("Cal_y_vs_x_precut", "Cal_y_vs_x_precut", 100, -450,450, 100, -450,450);
 Cal_y_vs_x_precut.setTitleX("X [cm]");
 Cal_y_vs_x_precut.setTitleY("Y [cm]");
 
-H1F Cal_lu_precut = new H1F("Cal_lu", "Cal_lu_precut", 150, 0, 450);
+H1F Cal_lu_precut = new H1F("Cal_lu", "Cal_lu_precut", 50, 0, 450);
 Cal_lu_precut.setTitleX("Cal_lu_precut [cm]");
-H1F Cal_lv_precut = new H1F("Cal_lv", "Cal_lv_precut", 150, 0, 450);
+H1F Cal_lv_precut = new H1F("Cal_lv", "Cal_lv_precut", 50, 0, 450);
 Cal_lv_precut.setTitleX("Cal_lv_precut [cm]");
-H1F Cal_lw_precut = new H1F("Cal_lw", "Cal_lw_precut", 150, 0, 450);
+H1F Cal_lw_precut = new H1F("Cal_lw", "Cal_lw_precut", 50, 0, 450);
 Cal_lw_precut.setTitleX("Cal_lw_precut [cm]");
 
 // fiducial cuts
-H1F Cal_lu = new H1F("Cal_lu", "Cal_lu", 150, 0, 450);
+H1F Cal_lu = new H1F("Cal_lu", "Cal_lu", 50, 0, 450);
 Cal_lu.setTitleX("Cal_lu_cut [cm]");
-H1F Cal_lv = new H1F("Cal_lv", "Cal_lv", 150, 0, 450);
+H1F Cal_lv = new H1F("Cal_lv", "Cal_lv", 50, 0, 450);
 Cal_lv.setTitleX("Cal_lv_cut [cm]");
-H1F Cal_lw = new H1F("Cal_lw", "Cal_lw", 150, 0, 450);
+H1F Cal_lw = new H1F("Cal_lw", "Cal_lw", 50, 0, 450);
 Cal_lw.setTitleX("Cal_lw_cut [cm]");
 
-H2F Cal_y_vs_x = new H2F("Cal_y_vs_x", "Cal_y_vs_x", 150, -450,450, 500, -450, 450);
+H2F Cal_y_vs_x = new H2F("Cal_y_vs_x", "Cal_y_vs_x", 100, -450,450, 100, -450, 450);
 Cal_y_vs_x.setTitleX("X [cm]");
 Cal_y_vs_x.setTitleY("Y [cm]");
 

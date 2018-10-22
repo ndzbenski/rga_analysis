@@ -25,16 +25,16 @@ else {wmax = 2.5;}
 HipoDataSource reader = new HipoDataSource();
 
 // The generated 1D histos 
-H1F theta_hist_gen = new H1F("theta_gen", "theta_gen", 500, 0, thetamax+5);
+H1F theta_hist_gen = new H1F("theta_gen", "theta_gen", 100, 0, thetamax+5);
 theta_hist_gen.setTitleX("theta_gen [deg]");
 
-H1F phi_hist_gen = new H1F("phi_gen", "phi_gen", 500, -phimax, phimax);
+H1F phi_hist_gen = new H1F("phi_gen", "phi_gen", 100, -phimax, phimax);
 phi_hist_gen.setTitleX("phi_gen [deg]");
 
-H1F mom_hist_gen = new H1F("gen momentum", "gen momentum", 500, 0, 11);
+H1F mom_hist_gen = new H1F("gen momentum", "gen momentum", 100, 0, 11);
 mom_hist_gen.setTitleX("momentum_gen [GeV]");
 
-H1F W_hist_gen = new H1F("W_gen", "W_gen", 500, wmin, wmax+0.5);
+H1F W_hist_gen = new H1F("W_gen", "W_gen", 100, wmin, wmax+0.5);
 W_hist_gen.setTitleX("W_gen [GeV]");
 
 H1F Q2_hist_gen = new H1F("Q2_gen", "Q2_gen", 50, 0, 13);
@@ -45,16 +45,16 @@ xB_hist_gen.setTitleX("xB_gen");
 
 
 // The reconstructed 1D histos 
-H1F theta_hist = new H1F("theta", "theta", 500, 0, thetamax+5);
+H1F theta_hist = new H1F("theta", "theta", 100, 0, thetamax+5);
 theta_hist.setTitleX("theta [deg]");
 
-H1F phi_hist = new H1F("phi", "phi", 500, -phimax, phimax);
+H1F phi_hist = new H1F("phi", "phi", 100, -phimax, phimax);
 phi_hist.setTitleX("phi [deg]");
 
-H1F momentum = new H1F("momentum", "momentum", 500, 0, 11);
+H1F momentum = new H1F("momentum", "momentum", 100, 0, 11);
 momentum.setTitleX("momentum [GeV]");
 
-H1F W_hist = new H1F("W", "W", 500, wmin, wmax+0.5);
+H1F W_hist = new H1F("W", "W", 100, wmin, wmax+0.5);
 W_hist.setTitleX("W [GeV]");
 
 H1F Q2_hist = new H1F("Q2", "Q2", 50, 0, 13);
@@ -75,19 +75,19 @@ xsection_hist.setTitleX("#sigma_{gen}");
 
 
 // The resolution 1D histos 
-H1F theta_hist_res = new H1F("theta_res", "theta_res", 500, -2, 2);
+H1F theta_hist_res = new H1F("theta_res", "theta_res", 100, -2, 2);
 theta_hist_res.setTitleX("#Delta theta [deg]");
 
-H1F phi_hist_res = new H1F("phi_res", "phi_res", 500, -10, 10);
+H1F phi_hist_res = new H1F("phi_res", "phi_res", 100, -10, 10);
 phi_hist_res.setTitleX("#Delta phi [deg]");
 
-H1F mom_hist_res = new H1F("momentum_res", "momentum_res", 500, -1, 1);
+H1F mom_hist_res = new H1F("momentum_res", "momentum_res", 100, -1, 1);
 mom_hist_res.setTitleX("#Deltap/p [GeV]");
 
-H1F W_hist_res = new H1F("W_res", "W_res", 500, -1, 1);
+H1F W_hist_res = new H1F("W_res", "W_res", 100, -1, 1);
 W_hist_res.setTitleX("W_res [GeV]");
 
-H1F Q2_hist_res = new H1F("Q2_res", "Q2_res", 500, -1, 1);
+H1F Q2_hist_res = new H1F("Q2_res", "Q2_res", 100, -1, 1);
 Q2_hist_res.setTitleX("Q^2_res [GeV^2]");
 
 H1F xB_hist_res = new H1F("xB_res", "xB_res", 100, -1, 1);
@@ -95,27 +95,27 @@ xB_hist_res.setTitleX("xB_res");
 
 
 // 2D Histos
-H2F Q2_vs_W = new H2F("Q2_vs_W", "Q2 vs W", 500, wmin, wmax+0.5, 500, 0.0, 13);
+H2F Q2_vs_W = new H2F("Q2_vs_W", "Q2 vs W", 100, wmin, wmax+0.5, 100, 0.0, 13);
 Q2_vs_W.setTitleX("W [GeV]");
 Q2_vs_W.setTitleY("Q^2 [GeV^2]");
 
-H2F E_vs_Theta = new H2F("E_vs_Theta", "E' vs Theta", 500, 5, thetamax+5, 500, 0, enmax);
+H2F E_vs_Theta = new H2F("E_vs_Theta", "E' vs Theta", 100, 5, thetamax+5, 100, 0, enmax);
 E_vs_Theta.setTitleX("Theta [deg]");
 E_vs_Theta.setTitleY("E' [GeV]");
 
-H2F Q2_vs_xB = new H2F("Q2_vs_xB", "Q2 vs xB", 500, 0, 1, 500, 0, 13);
+H2F Q2_vs_xB = new H2F("Q2_vs_xB", "Q2 vs xB", 100, 0, 1, 100, 0, 13);
 Q2_vs_xB.setTitleX("xB");
 Q2_vs_xB.setTitleY("Q^2 [GeV^2]");
 
-H2F W_vs_xB = new H2F("W_vs_xB", "W vs xB", 500, 0, 0.81, 500, wmin, wmax+0.5);
+H2F W_vs_xB = new H2F("W_vs_xB", "W vs xB", 100, 0, 0.81, 100, wmin, wmax+0.5);
 W_vs_xB.setTitleX("xB");
 W_vs_xB.setTitleY("W [GeV]");
 
-H2F Phi_vs_W = new H2F("Phi_vs_W", "Phi_vs_W", 500, wmin, wmax, 500, -phimax, phimax);
+H2F Phi_vs_W = new H2F("Phi_vs_W", "Phi_vs_W", 100, wmin, wmax, 100, -phimax, phimax);
 Phi_vs_W.setTitleX("W [GeV]");
 Phi_vs_W.setTitleY("Phi [deg]");
 
-H2F xsect_vs_xB = new H2F("xsect_vs_xB", "generating #sigma vs xB", 500, 0.0, 0.81, 500, -1, 150);
+H2F xsect_vs_xB = new H2F("xsect_vs_xB", "generating #sigma vs xB", 100, 0.0, 0.81, 100, -1, 150);
 xsect_vs_xB.setTitleX("xB");
 xsect_vs_xB.setTitleY("#sigma");
 
