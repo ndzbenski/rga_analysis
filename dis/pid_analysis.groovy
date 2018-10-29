@@ -47,7 +47,7 @@ H2F EC_vs_PCAL = new H2F("EC_vs_PCAL", "EC_{tot} vs E_{pcal}", 100, 0, 1.2, 100,
 EC_vs_PCAL.setTitleX("E_{PCAL} [GeV]");
 EC_vs_PCAL.setTitleY("EC_{in} + EC_{out} [GeV]");
 
-H2F Etot_vs_p = new H2F("Etot_vs_p", "E_{tot}/p vs p", 100, 1, 8, 100, 0, 0.4);
+H2F Etot_vs_p = new H2F("Etot_vs_p", "E_{tot}/p vs p", 100, 1, 8, 100, 0.15, 1);
 Etot_vs_p.setTitleX("p [GeV]");
 Etot_vs_p.setTitleY("E_tot/p");
 
@@ -211,7 +211,7 @@ new File('/work/clas12/nated/dis.cooked/', args[0]).eachLine { line ->
                             h_ectot.fill(ec_tot);
                             
                             EC_vs_PCAL.fill(e_pcal, ec_tot);
-                            Etot_vs_p.fill(mom, ec_tot/mom);
+                            Etot_vs_p.fill(mom, (ec_tot+e_pcal)/mom);
                             
                         }
                         //System.out.println("Layer: " + layer + ", Energy: " + bank_cal.getFloat("energy",cal_row));
