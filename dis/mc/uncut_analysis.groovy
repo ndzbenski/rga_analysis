@@ -9,7 +9,7 @@ import org.jlab.io.base.DataEvent;
 import org.jlab.io.hipo.HipoDataSource;
 
 // usage:
-// rungroovy xB_analysis.groovy <filename.hipo> <energy>
+// rungroovy uncut_analysis.groovy <filename.hipo> <energy>
 
 double en = Double.parseDouble(args[1]);
 double enmax = en+0.1; //GeV
@@ -133,7 +133,7 @@ LorentzVector e_vec = new LorentzVector(0.0, 0.0, en, en);
 // read in line by line
 // for each line, open and run analysis
 // close file
-new File('/work/clas12/nated/dis.cooked/', args[0]).eachLine { line ->
+new File('/work/clas12/nated/dis.cooked/mc/', args[0]).eachLine { line ->
     reader.open(line);
     
     double emax = 0;
@@ -189,12 +189,15 @@ new File('/work/clas12/nated/dis.cooked/', args[0]).eachLine { line ->
         // get generated data
        if ( event.hasBank("MC::Particle") ) {
             DataBank bank_gen = event.getBank("MC::Particle");
+            DataBank event_gen = event.getBank("MC::Event");
             
             for (int k = 0; k < bank_gen.rows(); k++) {
                 // get values
                 px_gen = bank_gen.getFloat("px", k);
                 py_gen = bank_gen.getFloat("py", k);
                 pz_gen = bank_gen.getFloat("pz", k);
+                
+                float weight_gen = event_gen.getFloat("weight", 0);
                 
                 // calculate values
                 mom_gen = (float) Math.sqrt(px_gen * px_gen + py_gen * py_gen + pz_gen * pz_gen);
@@ -208,15 +211,15 @@ new File('/work/clas12/nated/dis.cooked/', args[0]).eachLine { line ->
                 LorentzVector q_vec_gen = new LorentzVector(); //4 vector q
                 q_vec_gen.copy(e_vec); //e - e'
                 q_vec_gen.sub(e_vec_prime_gen);
-                Q2_gen = -q_vec_gen.mass2(); //-q^2
+                Q2_gen = (-q_vec_gen.mass2())/weight_gen; //-q^2
                 
                 LorentzVector w_vec_gen = new LorentzVector(); //4 vector used to calculate W
                 w_vec_gen.copy(p_vec); //p + q
                 w_vec_gen.add(q_vec_gen);
-                W_gen = w_vec_gen.mass();
+                W_gen = (w_vec_gen.mass())/weight_gen;
                 
                 E_prime_gen = e_vec_prime_gen.e();
-                xB_gen = Q2_gen/(2.0*p_mass*(en-E_prime_gen));
+                xB_gen = (Q2_gen/(2.0*p_mass*(en-E_prime_gen)));
                 
                 theta_gen *= 180/Math.PI;
                 phi_gen *= 180/Math.PI;
@@ -290,12 +293,12 @@ new File('/work/clas12/nated/dis.cooked/', args[0]).eachLine { line ->
                 LorentzVector q_vec_gen = new LorentzVector(); //4 vector q
                 q_vec_gen.copy(e_vec); //e - e'
                 q_vec_gen.sub(e_vec_prime_gen);
-                Q2_gen = -q_vec_gen.mass2(); //-q^2
+                Q2_gen = (-q_vec_gen.mass2())/weight; 
                 
                 LorentzVector w_vec_gen = new LorentzVector(); //4 vector used to calculate W
                 w_vec_gen.copy(p_vec); //p + q
                 w_vec_gen.add(q_vec_gen);
-                W_gen = w_vec_gen.mass();
+                W_gen = (w_vec_gen.mass())/weight;
                 
                 E_prime_gen = e_vec_prime_gen.e();
                 xB_gen = Q2_gen/(2.0*p_mass*(en-E_prime_gen));
@@ -314,15 +317,13 @@ new File('/work/clas12/nated/dis.cooked/', args[0]).eachLine { line ->
                 LorentzVector q_vec = new LorentzVector(); //4 vector q
                 q_vec.copy(e_vec); //e - e'
                 q_vec.sub(e_vec_prime);
-                Q2 = -q_vec.mass2(); //-q^2
-                
+                Q2 = (-q_vec.mass2())/weight; 
+                                
                 LorentzVector w_vec = new LorentzVector(); //4 vector used to calculate W
                 w_vec.copy(p_vec); //p + q
                 w_vec.add(q_vec);
-                W = w_vec.mass();
-                //double W = p_mass*p_mass + 2.0*p_mass*(en-E_prime) -Q2
-    
-                //double E_prime = Q2/(4.0*en*(Math.sin(theta*Math.PI/360.0)));
+                W = w_vec.mass()/weight;
+                
                 E_prime = e_vec_prime.e();
                 xB = Q2/(2.0*p_mass*(en-E_prime));
                 

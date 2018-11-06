@@ -8,7 +8,7 @@ import org.jlab.io.base.DataEvent;
 import org.jlab.io.hipo.HipoDataSource;
 
 // usage:
-// rungroovy xB_analysis.groovy <filename.hipo> <energy>
+// rungroovy pid_analysis.groovy <filename.hipo> <energy>
 
 double en = Double.parseDouble(args[1]);
 double enmax = en+0.1; //GeV
@@ -65,7 +65,7 @@ LorentzVector e_vec = new LorentzVector(0.0, 0.0, en, en);
 // read in line by line
 // for each line, open and run analysis
 // close file
-new File('/work/clas12/nated/dis.cooked/', args[0]).eachLine { line ->
+new File('/work/clas12/nated/dis.cooked/mc/', args[0]).eachLine { line ->
     reader.open(line);
     
     double emax = 0;
