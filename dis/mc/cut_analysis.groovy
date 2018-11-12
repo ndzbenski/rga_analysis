@@ -137,7 +137,7 @@ LorentzVector e_vec = new LorentzVector(0.0, 0.0, en, en);
 // read in line by line
 // for each line, open and run analysis
 // close file
-new File('/work/clas12/nated/dis.cooked/mc/', args[0]).eachLine { line ->
+new File('.', args[0]).eachLine { line ->
     reader.open(line);
     
     double emax = 0;
@@ -182,6 +182,8 @@ new File('/work/clas12/nated/dis.cooked/mc/', args[0]).eachLine { line ->
             DataBank bank_cal = event.getBank("RECHB::Calorimeter");
             DataBank bank_traj = event.getBank("REC::Traj");
             
+            DataBank bank_mc = event.getBank("MC::Event");
+            
             //System.out.println("number of bank_rec rows: " + bank_rec.rows() + ", # of gen bank rows: " + bank_gen.rows() );
                 
             for (int k = 0; k < bank_rec.rows(); k++) {
@@ -192,6 +194,8 @@ new File('/work/clas12/nated/dis.cooked/mc/', args[0]).eachLine { line ->
                 py = bank_rec.getFloat("py", k);
                 pz = bank_rec.getFloat("pz", k);
                 beta = bank_rec.getFloat("beta", k);
+                
+                weight = bank_mc.getFloat("weight", 0);
     
                 mom = (float) Math.sqrt(px * px + py * py + pz * pz);
                 phi = Math.atan2((double) py,(double) px);
@@ -270,10 +274,10 @@ new File('/work/clas12/nated/dis.cooked/mc/', args[0]).eachLine { line ->
                 E_prime = e_vec_prime.e();
                 xB = Q2/(2.0*p_mass*(en-E_prime));
                 
-                xB_hist.fill(xB);
+                xB_hist.fill(xB, weight);
                 
                 // Fill histos
-                Q2_hist.fill(Q2);
+                Q2_hist.fill(Q2, weight);
                 Eprime_hist.fill(E_prime);
                 
                 // xB histograms binned in 1 GeV^2 Q2
@@ -308,8 +312,8 @@ new File('/work/clas12/nated/dis.cooked/mc/', args[0]).eachLine { line ->
                 mom_hist_cut.fill(mom);
                     
                 W_hist_cut.fill(W);
-                Q2_hist_cut.fill(Q2);
-                xB_hist_cut.fill(xB);
+                Q2_hist_cut.fill(Q2, weight);
+                xB_hist_cut.fill(xB, weight);
                 
                 Q2_vs_W.fill(W,Q2);
                 Phi_vs_W.fill(W,phi);

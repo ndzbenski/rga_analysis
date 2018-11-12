@@ -106,13 +106,13 @@ new File('.', args[0]).eachLine { line ->
     float nphe = 0.0;
             
     while (reader.hasEvent()) {
-        DataEvent event = reader.getNextEvent();
+        DataEvent event_mc = reader.getNextEvent();
         
-        if (event.getBank("RECHB::Cherenkov")){
-            DataBank bank_cher = event.getBank("RECHB::Cherenkov");
+        if (event_mc.getBank("RECHB::Cherenkov")){
+            DataBank bank_cher_mc = event_mc.getBank("RECHB::Cherenkov");
         
-            for(int k = 0; k < bank_cher.rows(); k++){
-                nphe = bank_cher.getFloat("nphe", k);
+            for(int k = 0; k < bank_cher_mc.rows(); k++){
+                nphe = bank_cher_mc.getFloat("nphe", k);
                 h_nphe_mc.fill(nphe);
                 h_nphe_mc.setLineColor(3);
             } 
@@ -120,11 +120,11 @@ new File('.', args[0]).eachLine { line ->
         }
         
         // get reconstructed data
-        if (event.hasBank("RECHB::Particle") && event.hasBank("RECHB::Calorimeter") && event.hasBank("REC::Traj")) {
-            DataBank bank_rec = event.getBank("RECHB::Particle");
-            DataBank bank_cal = event.getBank("RECHB::Calorimeter");
-            DataBank bank_traj = event.getBank("REC::Traj");
-            DataBank ecal_hits = event.getBank("ECAL::clusters");
+        if (event_mc.hasBank("RECHB::Particle") && event_mc.hasBank("RECHB::Calorimeter") && event_mc.hasBank("REC::Traj")) {
+            DataBank bank_rec = event_mc.getBank("RECHB::Particle");
+            DataBank bank_cal = event_mc.getBank("RECHB::Calorimeter");
+            DataBank bank_traj = event_mc.getBank("REC::Traj");
+            DataBank ecal_hits = event_mc.getBank("ECAL::clusters");
        
             for (int k = 0; k < bank_rec.rows(); k++) {
                 pid = bank_rec.getInt("pid", k);
@@ -149,7 +149,7 @@ new File('.', args[0]).eachLine { line ->
                 Vector3 e_vec_3 = new Vector3(px, py, pz); //3 vector e'
                 LorentzVector e_vec_prime = new LorentzVector(); //4 vector e'
                 e_vec_prime.setVectM(e_vec_3, e_mass);
-                cal_row = cal_cut_row(event, k);
+                cal_row = cal_cut_row(event_mc, k);
                 
                 LorentzVector q_vec = new LorentzVector(); //4 vector q
                 q_vec.copy(e_vec); //e - e'

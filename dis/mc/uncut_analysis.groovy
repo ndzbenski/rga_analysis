@@ -2,7 +2,6 @@ import org.jlab.clas.physics.LorentzVector;
 import org.jlab.clas.physics.Vector3;
 import org.jlab.groot.data.H1F;
 import org.jlab.groot.data.H2F;
-//import org.jlab.groot.data.legend;
 import org.jlab.groot.ui.TCanvas;
 import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
@@ -70,8 +69,8 @@ xB_hist.setTitleX("xB");
 HashMap<Integer,H1F> xB_histmap = new HashMap<Integer,H1F>();
 for(int i = 0; i < 8; i++){xB_histmap.put(i,new H1F("xB", 100, 0, 0.9));}
 
-H1F xsection_hist = new H1F("xsection", "Generating Cross Section (#sigma)", 100, 0, 1);
-xsection_hist.setTitleX("#sigma_{gen}");
+H1F xsection_hist = new H1F("xsection", "weight", 50, 0, 5);
+xsection_hist.setTitleX("weight");
 
 
 // The resolution 1D histos 
@@ -133,7 +132,7 @@ LorentzVector e_vec = new LorentzVector(0.0, 0.0, en, en);
 // read in line by line
 // for each line, open and run analysis
 // close file
-new File('/work/clas12/nated/dis.cooked/mc/', args[0]).eachLine { line ->
+new File('.', args[0]).eachLine { line ->
     reader.open(line);
     
     double emax = 0;
@@ -179,62 +178,11 @@ new File('/work/clas12/nated/dis.cooked/mc/', args[0]).eachLine { line ->
     double W =0;
     double E_prime = 0;
     double xB = 0;
-                
-                
+
+    double tot_xsect = 0;
+    
     while (reader.hasEvent()) {
         DataEvent event = reader.getNextEvent();
-        
-        double tot_xsect = 0;
-        
-        // get generated data
-       if ( event.hasBank("MC::Particle") ) {
-            DataBank bank_gen = event.getBank("MC::Particle");
-            DataBank event_gen = event.getBank("MC::Event");
-            
-            for (int k = 0; k < bank_gen.rows(); k++) {
-                // get values
-                px_gen = bank_gen.getFloat("px", k);
-                py_gen = bank_gen.getFloat("py", k);
-                pz_gen = bank_gen.getFloat("pz", k);
-                
-                float weight_gen = event_gen.getFloat("weight", 0);
-                
-                // calculate values
-                mom_gen = (float) Math.sqrt(px_gen * px_gen + py_gen * py_gen + pz_gen * pz_gen);
-                phi_gen = Math.atan2((double) py_gen,(double) px_gen);
-                theta_gen = Math.acos((double) pz_gen/(double) mom_gen);
-                
-                Vector3 e_vec_3_gen = new Vector3(px_gen, py_gen, pz_gen); //3 vector e'
-                LorentzVector e_vec_prime_gen = new LorentzVector(); //4 vector e'
-                e_vec_prime_gen.setVectM(e_vec_3_gen, e_mass);
-                
-                LorentzVector q_vec_gen = new LorentzVector(); //4 vector q
-                q_vec_gen.copy(e_vec); //e - e'
-                q_vec_gen.sub(e_vec_prime_gen);
-                Q2_gen = (-q_vec_gen.mass2())/weight_gen; //-q^2
-                
-                LorentzVector w_vec_gen = new LorentzVector(); //4 vector used to calculate W
-                w_vec_gen.copy(p_vec); //p + q
-                w_vec_gen.add(q_vec_gen);
-                W_gen = (w_vec_gen.mass())/weight_gen;
-                
-                E_prime_gen = e_vec_prime_gen.e();
-                xB_gen = (Q2_gen/(2.0*p_mass*(en-E_prime_gen)));
-                
-                theta_gen *= 180/Math.PI;
-                phi_gen *= 180/Math.PI;
-                
-                // Fill histos
-                theta_hist_gen.fill(theta_gen);
-                phi_hist_gen.fill(phi_gen);
-                mom_hist_gen.fill(mom_gen);
-                
-                W_hist_gen.fill(W_gen);
-                Q2_hist_gen.fill(Q2_gen);
-                xB_hist_gen.fill(xB_gen);
-            }
-            
-        }
         
         // get reconstructed data
         if (event.hasBank("RECHB::Particle") && event.hasBank("RECHB::Calorimeter") && event.hasBank("REC::Traj") && event.hasBank("MC::Event")) {
@@ -242,13 +190,10 @@ new File('/work/clas12/nated/dis.cooked/mc/', args[0]).eachLine { line ->
             DataBank bank_cal = event.getBank("RECHB::Calorimeter");
             DataBank bank_traj = event.getBank("REC::Traj");
             DataBank bank_mcEvent = event.getBank("MC::Event");
-            
             DataBank bank_gen = event.getBank("MC::Particle");
             
             //System.out.println("number of bank_rec rows: " + bank_rec.rows() + ", # of gen bank rows: " + bank_gen.rows() );
             
-            for (int k = 0; k < bank_rec.rows(); k++) tot_xsect += bank_mcEvent.getFloat("weight", 0);
-                
             for (int k = 0; k < bank_rec.rows(); k++) {
    
                 weight = bank_mcEvent.getFloat("weight", 0);
@@ -269,7 +214,6 @@ new File('/work/clas12/nated/dis.cooked/mc/', args[0]).eachLine { line ->
                 mom_gen = (float) Math.sqrt(px_gen * px_gen + py_gen * py_gen + pz_gen * pz_gen);
                 phi_gen = Math.atan2((double) py_gen,(double) px_gen);
                 theta_gen = Math.acos((double) pz_gen/(double) mom_gen);
-                
                 
                 mom = (float) Math.sqrt(px * px + py * py + pz * pz);
                 phi = Math.atan2((double) py,(double) px);
@@ -293,50 +237,33 @@ new File('/work/clas12/nated/dis.cooked/mc/', args[0]).eachLine { line ->
                 LorentzVector q_vec_gen = new LorentzVector(); //4 vector q
                 q_vec_gen.copy(e_vec); //e - e'
                 q_vec_gen.sub(e_vec_prime_gen);
-                Q2_gen = (-q_vec_gen.mass2())/weight; 
+                Q2_gen = (-q_vec_gen.mass2()); 
                 
                 LorentzVector w_vec_gen = new LorentzVector(); //4 vector used to calculate W
                 w_vec_gen.copy(p_vec); //p + q
                 w_vec_gen.add(q_vec_gen);
-                W_gen = (w_vec_gen.mass())/weight;
+                W_gen = (w_vec_gen.mass());
                 
                 E_prime_gen = e_vec_prime_gen.e();
                 xB_gen = Q2_gen/(2.0*p_mass*(en-E_prime_gen));
                 
-    
                 Vector3 e_vec_3 = new Vector3(px, py, pz); //3 vector e'
                 LorentzVector e_vec_prime = new LorentzVector(); //4 vector e'
                 e_vec_prime.setVectM(e_vec_3, e_mass);
     
-                // ---------------- Cut on E' and theta -------------------
-                //if(e_vec_prime.e() < 0.1 * en){continue;}  //cut below 10% beam
-                //if(theta < 5 || theta > 40){continue;}     //cut outside of 5 and 40 degrees for FD
-                // --------------------------------------------------------
-
                 momentum.fill(mom);
                 LorentzVector q_vec = new LorentzVector(); //4 vector q
                 q_vec.copy(e_vec); //e - e'
                 q_vec.sub(e_vec_prime);
-                Q2 = (-q_vec.mass2())/weight; 
+                Q2 = (-q_vec.mass2()); 
                                 
                 LorentzVector w_vec = new LorentzVector(); //4 vector used to calculate W
                 w_vec.copy(p_vec); //p + q
                 w_vec.add(q_vec);
-                W = w_vec.mass()/weight;
+                W = w_vec.mass();
                 
                 E_prime = e_vec_prime.e();
                 xB = Q2/(2.0*p_mass*(en-E_prime));
-                
-                xB_hist.fill(xB);
-                
-                // ------------------------ Cuts --------------------------
-                //if(W < 2) continue;                    // cut below 2 GeV/c^2
-                
-                // --------------------------------------------------------
-                
-                // Fill histos
-                Q2_hist.fill(Q2);
-                Eprime_hist.fill(E_prime);
                 
                 // xB histograms binned in 1 GeV^2 Q2
                 for(int j = 0; j < 8; j++){
@@ -346,10 +273,25 @@ new File('/work/clas12/nated/dis.cooked/mc/', args[0]).eachLine { line ->
                     else {continue;}
                 }
                 
-                W_hist.fill(W);
-                xsection_hist.fill(weight);
+                xsection_hist.fill(bank_mcEvent.getFloat("weight", 0));
+                
+                // Fill generated histos
+                theta_hist_gen.fill(theta_gen);
+                phi_hist_gen.fill(phi_gen);
+                mom_hist_gen.fill(mom_gen);
+                
+                W_hist_gen.fill(W_gen);
+                Q2_hist_gen.fill(Q2_gen);
+                xB_hist_gen.fill(xB_gen);
+                
                 theta_hist.fill(theta);
                 phi_hist.fill(phi);
+                
+                W_hist.fill(W);
+                Q2_hist.fill(Q2);
+                xB_hist.fill(xB);
+                
+                Eprime_hist.fill(E_prime);
                 
                 Q2_vs_W.fill(W,Q2);
                 Phi_vs_W.fill(W,phi);
@@ -374,7 +316,9 @@ new File('/work/clas12/nated/dis.cooked/mc/', args[0]).eachLine { line ->
 
             } // end for
         } // end if
+        
     } // end while
+    
     
     
     //mom_hist_res.sub(momentum);
@@ -436,6 +380,7 @@ can_1d_b.draw(xB_hist_res);
 can_1d_b.save("figs/uncut/1D_kin_spectra.png");
 
 TCanvas can_2d = new TCanvas("can", 1100, 600);
+can_2d.setTitle("2D spectra");
 can_2d.divide(2,2);
 can_2d.cd(0);
 can_2d.draw(Q2_vs_W);
@@ -446,6 +391,11 @@ can_2d.draw(Q2_vs_xB);
 can_2d.cd(3);
 can_2d.draw(W_vs_xB);
 can_2d.save("figs/uncut/2d_spectra.png");
+
+TCanvas can_w = new TCanvas("can", 800, 600);
+can_w.cd(0);
+can_w.draw(xsection_hist);
+can_w.save("figs/uncut/weight.png");
 
 /*
 HashMap<Integer,TCanvas> canvasmap = new HashMap<Integer,TCanvas>();

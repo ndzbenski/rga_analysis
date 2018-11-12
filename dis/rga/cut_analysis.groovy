@@ -47,7 +47,7 @@ theta_hist.setTitleX("theta [deg]");
 H1F phi_hist = new H1F("phi", "phi", 100, -phimax, phimax);
 phi_hist.setTitleX("phi [deg]");
 
-H1F momentum = new H1F("momentum", "momentum", 20, 0, 11);
+H1F momentum = new H1F("momentum", "momentum", 50, 0, 11);
 momentum.setTitleX("momentum [GeV]");
 
 H1F W_hist = new H1F("W", "W", 100, 0, wmax+0.5);
@@ -59,7 +59,7 @@ Q2_hist.setTitleX("Q^2 [GeV^2]");
 H1F Eprime_hist = new H1F("Eprime", "E'", 50, 0, 13);
 Eprime_hist.setTitleX("E' [GeV]");
 
-H1F xB_hist = new H1F("xB", "xB", 20, 0, 1);
+H1F xB_hist = new H1F("xB", "xB", 50, 0, 1);
 xB_hist.setTitleX("xB");
 
 // The 1D histos cuts
@@ -69,7 +69,7 @@ theta_hist_cut.setTitleX("theta [deg]");
 H1F phi_hist_cut = new H1F("phi_cut", "phi_cut", 100, -phimax, phimax);
 phi_hist_cut.setTitleX("phi [deg]");
 
-H1F mom_hist_cut = new H1F("momentum_cut", "momentum_cut", 20, 0, 11);
+H1F mom_hist_cut = new H1F("momentum_cut", "momentum_cut", 50, 0, 11);
 mom_hist_cut.setTitleX("p [GeV]");
 
 H1F W_hist_cut = new H1F("W_cut", "W_cut", 100, wmin, wmax+0.5);
@@ -78,7 +78,7 @@ W_hist_cut.setTitleX("W_cut [GeV]");
 H1F Q2_hist_cut = new H1F("Q2_cut", "Q2_cut", 100, 0, 13);
 Q2_hist_cut.setTitleX("Q^2_cut [GeV^2]");
 
-H1F xB_hist_cut = new H1F("xB_cut", "xB_cut", 20, 0, 1);
+H1F xB_hist_cut = new H1F("xB_cut", "xB_cut", 50, 0, 1);
 xB_hist_cut.setTitleX("xB_cut");
 
 
@@ -146,11 +146,12 @@ LorentzVector e_vec = new LorentzVector(0.0, 0.0, en, en);
 // read in line by line
 // for each line, open and run analysis
 // close file
+
 // for MC data
-// reconstructed data variables
 new File('.', args[0]).eachLine { line ->
     reader.open(line);
     
+    byte q_mc = 0;
     float weight = 0;
     int pid_mc = 0;
     float px_mc = 0;
@@ -164,21 +165,26 @@ new File('.', args[0]).eachLine { line ->
     double E_prime_mc = 0;
     double xB_mc = 0;
     
+    byte sector = 0;
+    int cal_row = 0;
+    
     while (reader.hasEvent()) {
         DataEvent event = reader.getNextEvent();
         
          // get MC reconstructed data
-       if ( event.hasBank("RECHB::Particle") ) {
+       if ( event.hasBank("RECHB::Particle") && event.hasBank("RECHB::Calorimeter") ) {
             DataBank bank_mc = event.getBank("RECHB::Particle");
+            DataBank bank_evn_mc = event.getBank("MC::Event");
+            DataBank bank_cal_mc = event.getBank("RECHB::Calorimeter");
             
             for (int k = 0; k < bank_mc.rows(); k++) {
                 // get values
                 px_mc = bank_mc.getFloat("px", k);
                 py_mc = bank_mc.getFloat("py", k);
                 pz_mc = bank_mc.getFloat("pz", k);
-                pid_mc = bank_mc.getInt("pid", k);
+                q_mc = bank_mc.getByte("charge", k);
                 
-                if(pid_mc != 11) continue;
+                weight = bank_evn_mc.getFloat("weight", 0);
                 
                 // calculate values
                 mom_mc = (float) Math.sqrt(px_mc * px_mc + py_mc * py_mc + pz_mc * pz_mc);
@@ -205,19 +211,21 @@ new File('.', args[0]).eachLine { line ->
                 theta_mc *= 180/Math.PI;
                 phi_mc *= 180/Math.PI;
                 
+                if(q_mc != -1) continue;
+                
                 // Fill histos
                 theta_hist_mc.fill(theta_mc);
                 theta_hist_mc.setLineColor(3); 
                 phi_hist_mc.fill(phi_mc);
                 phi_hist_mc.setLineColor(3); 
-                mom_hist_mc.fill(mom_mc);
+                mom_hist_mc.fill(mom_mc, weight);
                 mom_hist_mc.setLineColor(3); 
                 
-                W_hist_mc.fill(W_mc);
+                W_hist_mc.fill(W_mc, weight);
                 W_hist_mc.setLineColor(3); 
-                Q2_hist_mc.fill(Q2_mc);
+                Q2_hist_mc.fill(Q2_mc, weight);
                 Q2_hist_mc.setLineColor(3); 
-                xB_hist_mc.fill(xB_mc);
+                xB_hist_mc.fill(xB_mc, weight);
                 xB_hist_mc.setLineColor(3); 
                 
                 // cuts
@@ -226,20 +234,34 @@ new File('.', args[0]).eachLine { line ->
                 if (Q2_mc < 1) {continue;}
                 if (E_prime_mc < 0.1*en) {continue;}
                 
-                // Fill histos
-                theta_hist_mc_cut.fill(theta_mc);
-                theta_hist_mc_cut.setLineColor(3); 
-                phi_hist_mc_cut.fill(phi_mc);
-                phi_hist_mc_cut.setLineColor(3); 
-                mom_hist_mc_cut.fill(mom_mc);
-                mom_hist_mc_cut.setLineColor(3); 
-                
-                W_hist_mc_cut.fill(W_mc);
-                W_hist_mc_cut.setLineColor(3); 
-                Q2_hist_mc_cut.fill(Q2_mc);
-                Q2_hist_mc_cut.setLineColor(3); 
-                xB_hist_mc_cut.fill(xB_mc);
-                xB_hist_mc_cut.setLineColor(3); 
+                cal_row = cal_cut_row(event, k);
+                //System.out.println(j + " " + bank_cal.rows());
+                if(cal_row != -1){
+                    sector = bank_cal_mc.getByte("sector",cal_row);
+                    
+                    float x_cal = bank_cal_mc.getFloat("x",cal_row);
+                    float y_cal = bank_cal_mc.getFloat("y",cal_row);
+                    
+                    float lu = bank_cal_mc.getFloat("lu",cal_row);
+                    float lv = bank_cal_mc.getFloat("lv",cal_row);
+                    float lw = bank_cal_mc.getFloat("lw",cal_row);
+                    
+                    if(lu < 350 && lu > 60 && lv < 370 && lw < 390){
+                        theta_hist_mc_cut.fill(theta_mc);
+                        theta_hist_mc_cut.setLineColor(3); 
+                        phi_hist_mc_cut.fill(phi_mc);
+                        phi_hist_mc_cut.setLineColor(3); 
+                        mom_hist_mc_cut.fill(mom_mc);
+                        mom_hist_mc_cut.setLineColor(3); 
+                        
+                        W_hist_mc_cut.fill(W_mc, weight);
+                        W_hist_mc_cut.setLineColor(3); 
+                        Q2_hist_mc_cut.fill(Q2_mc, weight);
+                        Q2_hist_mc_cut.setLineColor(3); 
+                        xB_hist_mc_cut.fill(xB_mc, weight);
+                        xB_hist_mc_cut.setLineColor(3); 
+                    }
+                }
                 
             } // end for loop
         }// end if 
@@ -319,47 +341,7 @@ new File('.', args[1]).eachLine { line ->
                 Vector3 e_vec_3 = new Vector3(px, py, pz); //3 vector e'
                 LorentzVector e_vec_prime = new LorentzVector(); //4 vector e'
                 e_vec_prime.setVectM(e_vec_3, e_mass);
-    
-                cal_row = cal_cut_row(event, k);
-                //System.out.println(j + " " + bank_cal.rows());
-                if(cal_row != -1){
-                    sector = bank_cal.getByte("sector",cal_row);
-                    
-                    float x_cal = bank_cal.getFloat("x",cal_row);
-                    float y_cal = bank_cal.getFloat("y",cal_row);
-                    
-                    float lu = bank_cal.getFloat("lu",cal_row);
-                    float lv = bank_cal.getFloat("lv",cal_row);
-                    float lw = bank_cal.getFloat("lw",cal_row);
-                    
-                    Cal_y_vs_x_precut.fill(x_cal,y_cal);
-                    Cal_lu_precut.fill(lu);
-                    Cal_lv_precut.fill(lv);
-                    Cal_lw_precut.fill(lw);
-                    
-                    if(lu < 350 && lu > 60 && lv < 370 && lw < 390){
-                        Cal_lu.fill(lu);
-                        Cal_lv.fill(lv);
-                        Cal_lw.fill(lw);
-                        Cal_y_vs_x.fill(x_cal,y_cal);
-                    }
-                }
                 
-                dc_row = dc_cut_row(event, k);
-                if(dc_row != -1){
-                    float x_dc = bank_traj.getFloat("x",dc_row);
-                    float y_dc = bank_traj.getFloat("y",dc_row);
-                    float z_dc = bank_traj.getFloat("z",dc_row);
-                    
-                    double pos = Math.sqrt(x_dc*x_dc + y_dc*y_dc + z_dc*z_dc);
-                    double theta_dc = Math.acos((double) z_dc/ pos);
-                    double phi_dc = Math.atan2((double) y_dc,(double) x_dc);
-                    
-                    theta_dc *= 180/Math.PI;
-                    phi_dc *= 180/Math.PI;
-                    
-                }
-
                 LorentzVector q_vec = new LorentzVector(); //4 vector q
                 q_vec.copy(e_vec); //e - e'
                 q_vec.sub(e_vec_prime);
@@ -395,20 +377,59 @@ new File('.', args[1]).eachLine { line ->
                 if (Q2 < 1) {continue;}
                 if (E_prime < 0.1*en) {continue;}
                 
-                theta_hist_cut.fill(theta);
-                phi_hist_cut.fill(phi);
-                mom_hist_cut.fill(mom);
+                cal_row = cal_cut_row(event, k);
+                //System.out.println(j + " " + bank_cal.rows());
+                if(cal_row != -1){
+                    sector = bank_cal.getByte("sector",cal_row);
                     
-                W_hist_cut.fill(W);
-                Q2_hist_cut.fill(Q2);
-                xB_hist_cut.fill(xB);
+                    float x_cal = bank_cal.getFloat("x",cal_row);
+                    float y_cal = bank_cal.getFloat("y",cal_row);
+                    
+                    float lu = bank_cal.getFloat("lu",cal_row);
+                    float lv = bank_cal.getFloat("lv",cal_row);
+                    float lw = bank_cal.getFloat("lw",cal_row);
+                    
+                    Cal_y_vs_x_precut.fill(x_cal,y_cal);
+                    Cal_lu_precut.fill(lu);
+                    Cal_lv_precut.fill(lv);
+                    Cal_lw_precut.fill(lw);
+                    
+                    if(lu < 350 && lu > 60 && lv < 370 && lw < 390){
+                        Cal_lu.fill(lu);
+                        Cal_lv.fill(lv);
+                        Cal_lw.fill(lw);
+                        Cal_y_vs_x.fill(x_cal,y_cal);
+                        
+                        theta_hist_cut.fill(theta);
+                        phi_hist_cut.fill(phi);
+                        mom_hist_cut.fill(mom);
+                            
+                        W_hist_cut.fill(W);
+                        Q2_hist_cut.fill(Q2);
+                        xB_hist_cut.fill(xB);
+                        
+                        Q2_vs_W.fill(W,Q2);
+                        Phi_vs_W.fill(W,phi);
+                        E_vs_Theta.fill(theta,e_vec_prime.e());
+                        Q2_vs_xB.fill(xB,Q2);
+                        W_vs_xB.fill(xB,W);
+                    }
+                }
                 
-                Q2_vs_W.fill(W,Q2);
-                Phi_vs_W.fill(W,phi);
-                E_vs_Theta.fill(theta,e_vec_prime.e()); // check this with calculated E'
-                Q2_vs_xB.fill(xB,Q2);
-                W_vs_xB.fill(xB,W);
-                
+                dc_row = dc_cut_row(event, k);
+                if(dc_row != -1){
+                    float x_dc = bank_traj.getFloat("x",dc_row);
+                    float y_dc = bank_traj.getFloat("y",dc_row);
+                    float z_dc = bank_traj.getFloat("z",dc_row);
+                    
+                    double pos = Math.sqrt(x_dc*x_dc + y_dc*y_dc + z_dc*z_dc);
+                    double theta_dc = Math.acos((double) z_dc/ pos);
+                    double phi_dc = Math.atan2((double) y_dc,(double) x_dc);
+                    
+                    theta_dc *= 180/Math.PI;
+                    phi_dc *= 180/Math.PI;
+                    
+                }
             } // end for
         } // end if    
     } // end while

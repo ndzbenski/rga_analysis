@@ -65,7 +65,7 @@ LorentzVector e_vec = new LorentzVector(0.0, 0.0, en, en);
 // read in line by line
 // for each line, open and run analysis
 // close file
-new File('/work/clas12/nated/dis.cooked/mc/', args[0]).eachLine { line ->
+new File('.', args[0]).eachLine { line ->
     reader.open(line);
     
     double emax = 0;
@@ -120,6 +120,8 @@ new File('/work/clas12/nated/dis.cooked/mc/', args[0]).eachLine { line ->
             DataBank bank_cal = event.getBank("RECHB::Calorimeter");
             DataBank bank_traj = event.getBank("REC::Traj");
             DataBank ecal_hits = event.getBank("ECAL::clusters");
+            
+            DataBank bank_mc = event.getBank("MC::Event");
        
             for (int k = 0; k < bank_rec.rows(); k++) {
                 pid = bank_rec.getInt("pid", k);
@@ -128,6 +130,8 @@ new File('/work/clas12/nated/dis.cooked/mc/', args[0]).eachLine { line ->
                 py = bank_rec.getFloat("py", k);
                 pz = bank_rec.getFloat("pz", k);
                 beta = bank_rec.getFloat("beta", k);
+                
+                weight = bank_mc.getFloat("weight", 0);
                 
                 mom = (float) Math.sqrt(px * px + py * py + pz * pz);
                 phi = Math.atan2((double) py,(double) px);
@@ -171,6 +175,7 @@ new File('/work/clas12/nated/dis.cooked/mc/', args[0]).eachLine { line ->
                 if (theta < 5 || theta > 40) {continue;}  
                 if (W < 2) {continue;}
                 if (E_prime < 0.1*en) {continue;}
+                if (Q2 < 1) {continue;}
                 
                 //System.out.println("k index: " + k + ", cal row index: " + cal_row);
                 
@@ -210,8 +215,8 @@ new File('/work/clas12/nated/dis.cooked/mc/', args[0]).eachLine { line ->
                             h_ecout.fill(ec_out);
                             h_ectot.fill(ec_tot);
                             
-                            EC_vs_PCAL.fill(e_pcal, ec_tot);
-                            Etot_vs_p.fill(mom, (ec_tot+e_pcal)/mom);
+                            EC_vs_PCAL.fill(e_pcal, ec_tot, weight);
+                            Etot_vs_p.fill(mom, (ec_tot+e_pcal)/mom, weight);
                             
                         }
                         //System.out.println("Layer: " + layer + ", Energy: " + bank_cal.getFloat("energy",cal_row));
