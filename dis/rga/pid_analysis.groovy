@@ -56,14 +56,25 @@ H2F EC_vs_PCAL = new H2F("EC_vs_PCAL", "EC_{tot} vs E_{pcal}", 100, 0, 1.2, 100,
 EC_vs_PCAL.setTitleX("E_{PCAL} [GeV]");
 EC_vs_PCAL.setTitleY("EC_{in} + EC_{out} [GeV]");
 
-H2F Etot_vs_p = new H2F("Etot_vs_p", "E_{tot}/p vs p", 100, 0, 8, 100, 0.15, 1);
+H2F EC_vs_PCAL_cut = new H2F("EC_vs_PCAL_cut", "EC_{tot} vs E_{pcal} cut", 100, 0, 1.2, 100, 0, 1);
+EC_vs_PCAL_cut.setTitleX("E_{PCAL} [GeV]");
+EC_vs_PCAL_cut.setTitleY("EC_{in} + EC_{out} [GeV]");
+
+H2F Etot_vs_p = new H2F("Etot_vs_p", "E_{tot}/p vs p", 100, 0, 8, 100, 0, 1);
 Etot_vs_p.setTitleX("p [GeV]");
 Etot_vs_p.setTitleY("E_tot/p");
 
+H2F Etot_vs_p_cut = new H2F("Etot_vs_p_cut", "E_{tot}/p vs p cut", 100, 0, 8, 100, 0, 1);
+Etot_vs_p_cut.setTitleX("p [GeV]");
+Etot_vs_p_cut.setTitleY("E_tot/p");
 
-H2F Etot_vs_p_1 = new H2F("Etot_vs_p_1", "E_{tot}/p vs p cut", 50, 0, 8, 50, 0.15, 1);
-Etot_vs_p_1.setTitleX("p [GeV]");
-Etot_vs_p_1.setTitleY("E_tot/p");
+H2F beta_vs_p = new H2F ("beta_vs_p", "beta vs p", 100, 0, 10, 100, 0, 1.5);
+beta_vs_p.setTitleX("p [GeV]");
+beta_vs_p.setTitleY("#beta");
+
+H2F beta_vs_p_cut = new H2F ("beta_vs_p_cut", "beta vs p cut", 100, 0, 10, 100, 0.8, 1.2);
+beta_vs_p_cut.setTitleX("p [GeV]");
+beta_vs_p_cut.setTitleY("#beta");
 
 double e_mass = 0.000511;
 double p_mass = 0.93827203;
@@ -104,6 +115,7 @@ new File('.', args[0]).eachLine { line ->
     double E_prime_mc = 0;
     double xB = 0;
     float nphe = 0.0;
+    float weight = 0;
             
     while (reader.hasEvent()) {
         DataEvent event_mc = reader.getNextEvent();
@@ -119,12 +131,14 @@ new File('.', args[0]).eachLine { line ->
             
         }
         
-        // get reconstructed data
-        if (event_mc.hasBank("RECHB::Particle") && event_mc.hasBank("RECHB::Calorimeter") && event_mc.hasBank("REC::Traj")) {
+        // get reconstructed MC
+        if (event_mc.hasBank("RECHB::Particle") && event_mc.hasBank("RECHB::Calorimeter") && event_mc.hasBank("REC::Traj") && event_mc.hasBank("MC::Event")) {
             DataBank bank_rec = event_mc.getBank("RECHB::Particle");
             DataBank bank_cal = event_mc.getBank("RECHB::Calorimeter");
             DataBank bank_traj = event_mc.getBank("REC::Traj");
             DataBank ecal_hits = event_mc.getBank("ECAL::clusters");
+            
+            DataBank bank_mc = event_mc.getBank("MC::Event");
        
             for (int k = 0; k < bank_rec.rows(); k++) {
                 pid = bank_rec.getInt("pid", k);
@@ -133,6 +147,8 @@ new File('.', args[0]).eachLine { line ->
                 py = bank_rec.getFloat("py", k);
                 pz = bank_rec.getFloat("pz", k);
                 beta = bank_rec.getFloat("beta", k);
+                
+                weight = bank_mc.getFloat("weight", 0);
                 
                 mom = (float) Math.sqrt(px * px + py * py + pz * pz);
                 phi = Math.atan2((double) py,(double) px);
@@ -199,15 +215,15 @@ new File('.', args[0]).eachLine { line ->
                             }
                             float ec_tot_mc = ec_in_mc + ec_out_mc;
                             
-                            h_eprime_mc.fill(E_prime_mc);
+                            h_eprime_mc.fill(E_prime_mc, weight);
                             h_eprime_mc.setLineColor(3); 
-                            h_epcal_mc.fill(e_pcal_mc);
+                            h_epcal_mc.fill(e_pcal_mc, weight);
                             h_epcal_mc.setLineColor(3);
-                            h_ecin_mc.fill(ec_in_mc);
+                            h_ecin_mc.fill(ec_in_mc, weight);
                             h_ecin_mc.setLineColor(3);
-                            h_ecout_mc.fill(ec_out_mc);
+                            h_ecout_mc.fill(ec_out_mc, weight);
                             h_ecout_mc.setLineColor(3);
-                            h_ectot_mc.fill(ec_tot_mc);
+                            h_ectot_mc.fill(ec_tot_mc, weight);
                             h_ectot_mc.setLineColor(3);
                             
                         }
@@ -246,7 +262,7 @@ new File('.', args[1]).eachLine { line ->
     float px = 0;
     float py = 0;
     float pz = 0;
-    float beta =0;
+    float beta = 0;
     float mom = 0;
     double phi = 0;
     double theta =  0;
@@ -315,12 +331,6 @@ new File('.', args[1]).eachLine { line ->
                 E_prime = e_vec_prime.e();
                 xB = Q2/(2.0*p_mass*(en-E_prime));
                 
-                // begin cuts
-                if (theta < 5 || theta > 40) {continue;}  
-                if (W < 2) {continue;}
-                if (E_prime < 0.1*en) {continue;}
-                if (Q2 < 1) {continue;}
-               
                 // Calorimeter cuts
                 if(cal_row != -1){
                     float e_pcal = 0;
@@ -350,6 +360,17 @@ new File('.', args[1]).eachLine { line ->
                             }
                             float ec_tot = ec_in + ec_out;
                             
+                            EC_vs_PCAL.fill(e_pcal, ec_tot);
+                            Etot_vs_p.fill(mom, (ec_tot+e_pcal)/mom);
+                            beta_vs_p.fill(mom, beta);
+                            
+                            // begin cuts
+                            if (theta < 5 || theta > 40) {continue;}  
+                            if (W < 2) {continue;}
+                            if (E_prime < 0.1*en) {continue;}
+                            if (Q2 < 1) {continue;}
+                            if(e_pcal < 0.1){continue;}
+                            if(beta > 1.1 || beta < 0.9) {continue;}
                             
                             h_eprime.fill(E_prime);
                             h_epcal.fill(e_pcal);
@@ -357,13 +378,9 @@ new File('.', args[1]).eachLine { line ->
                             h_ecout.fill(ec_out);
                             h_ectot.fill(ec_tot);
                             
-                            EC_vs_PCAL.fill(e_pcal, ec_tot);
-                            Etot_vs_p.fill(mom, (ec_tot+e_pcal)/mom);
-                            
-                            if(e_pcal > 0.1){
-                             Etot_vs_p_1.fill(mom, (ec_tot+e_pcal)/mom);
-                             }
-                            
+                            EC_vs_PCAL_cut.fill(e_pcal, ec_tot);
+                            Etot_vs_p_cut.fill(mom, (ec_tot+e_pcal)/mom);
+                            beta_vs_p_cut.fill(mom, beta);
                             
                         }
                     }
@@ -415,7 +432,7 @@ int dc_cut_row(DataEvent event, int row){
     return cal_row_match;
 }
 
-TCanvas can = new TCanvas("can", 1100, 800);
+TCanvas can = new TCanvas("can", 1200, 700);
 can.setTitle("Energy spectra");
 can.divide(3,2);
 can.cd(0);
@@ -451,17 +468,19 @@ can.getPad().setLegendPosition(20, 20);
 can.save("figs/pid/energy_spectra.png");
 
 
-TCanvas can1 = new TCanvas("can1", 800, 600);
-can1.setTitle("E_{tot} vs E_{PCAL}");
+TCanvas can1 = new TCanvas("can1", 1200, 700);
+can1.setTitle("Calorimeter cuts");
+can1.divide(3,2);
+can1.cd(0);
 can1.draw(EC_vs_PCAL);
-can1.save("figs/pid/ECtot_vs_Epcal.png");
-
-TCanvas can2 = new TCanvas("can2", 800, 600);
-can2.setTitle("E_{tot}/p vs p");
-can2.draw(Etot_vs_p);
-can2.save("figs/pid/Etot_vs_p.png");
-
-TCanvas can3 = new TCanvas("can3", 800, 600);
-can3.setTitle("E_{tot}/p vs p");
-can3.draw(Etot_vs_p_1);
-can3.save("figs/pid/Etot_vs_p_1.png");
+can1.cd(1);
+can1.draw(Etot_vs_p);
+can1.cd(2);
+can1.draw(beta_vs_p);
+can1.cd(3);
+can1.draw(EC_vs_PCAL_cut);
+can1.cd(4);
+can1.draw(Etot_vs_p_cut);
+can1.cd(5);
+can1.draw(beta_vs_p_cut);
+can1.save("figs/pid/cal_cuts.png");

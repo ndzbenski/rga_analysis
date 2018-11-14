@@ -214,9 +214,9 @@ new File('.', args[0]).eachLine { line ->
                 if(q_mc != -1) continue;
                 
                 // Fill histos
-                theta_hist_mc.fill(theta_mc);
+                theta_hist_mc.fill(theta_mc, weight);
                 theta_hist_mc.setLineColor(3); 
-                phi_hist_mc.fill(phi_mc);
+                phi_hist_mc.fill(phi_mc, weight);
                 phi_hist_mc.setLineColor(3); 
                 mom_hist_mc.fill(mom_mc, weight);
                 mom_hist_mc.setLineColor(3); 
@@ -247,11 +247,11 @@ new File('.', args[0]).eachLine { line ->
                     float lw = bank_cal_mc.getFloat("lw",cal_row);
                     
                     if(lu < 350 && lu > 60 && lv < 370 && lw < 390){
-                        theta_hist_mc_cut.fill(theta_mc);
+                        theta_hist_mc_cut.fill(theta_mc, weight);
                         theta_hist_mc_cut.setLineColor(3); 
-                        phi_hist_mc_cut.fill(phi_mc);
+                        phi_hist_mc_cut.fill(phi_mc, weight);
                         phi_hist_mc_cut.setLineColor(3); 
-                        mom_hist_mc_cut.fill(mom_mc);
+                        mom_hist_mc_cut.fill(mom_mc, weight);
                         mom_hist_mc_cut.setLineColor(3); 
                         
                         W_hist_mc_cut.fill(W_mc, weight);
