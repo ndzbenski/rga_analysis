@@ -215,15 +215,15 @@ new File('.', args[0]).eachLine { line ->
                             }
                             float ec_tot_mc = ec_in_mc + ec_out_mc;
                             
-                            h_eprime_mc.fill(E_prime_mc, weight);
+                            h_eprime_mc.fill(E_prime_mc);
                             h_eprime_mc.setLineColor(3); 
-                            h_epcal_mc.fill(e_pcal_mc, weight);
+                            h_epcal_mc.fill(e_pcal_mc);
                             h_epcal_mc.setLineColor(3);
-                            h_ecin_mc.fill(ec_in_mc, weight);
+                            h_ecin_mc.fill(ec_in_mc);
                             h_ecin_mc.setLineColor(3);
-                            h_ecout_mc.fill(ec_out_mc, weight);
+                            h_ecout_mc.fill(ec_out_mc);
                             h_ecout_mc.setLineColor(3);
-                            h_ectot_mc.fill(ec_tot_mc, weight);
+                            h_ectot_mc.fill(ec_tot_mc);
                             h_ectot_mc.setLineColor(3);
                             
                         }
@@ -440,6 +440,9 @@ can.draw(h_eprime);
 can.draw(h_eprime_mc,"same");
 can.getPad().setLegend(true);
 can.getPad().setLegendPosition(20, 20);
+int ymax = h_eprime_mc.getMax();
+can.drawLine(1,0,1,ymax);
+
 can.cd(1);
 can.draw(h_epcal);
 can.draw(h_epcal_mc,"same");
