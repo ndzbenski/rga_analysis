@@ -177,9 +177,9 @@ new File('.', args[0]).eachLine { line ->
         double tot_xsect = 0;
         
         // get reconstructed data
-        if (event.hasBank("RECHB::Particle") && event.hasBank("RECHB::Calorimeter") && event.hasBank("REC::Traj") && event.hasBank("MC::Event")) {
-            DataBank bank_rec = event.getBank("RECHB::Particle");
-            DataBank bank_cal = event.getBank("RECHB::Calorimeter");
+        if (event.hasBank("REC::Particle") && event.hasBank("REC::Calorimeter") && event.hasBank("REC::Traj") && event.hasBank("MC::Event")) {
+            DataBank bank_rec = event.getBank("REC::Particle");
+            DataBank bank_cal = event.getBank("REC::Calorimeter");
             DataBank bank_traj = event.getBank("REC::Traj");
             
             DataBank bank_mc = event.getBank("MC::Event");
@@ -195,8 +195,8 @@ new File('.', args[0]).eachLine { line ->
                 pz = bank_rec.getFloat("pz", k);
                 beta = bank_rec.getFloat("beta", k);
                 
-                weight = bank_mc.getFloat("weight", 0);
-    
+                //weight = bank_mc.getFloat("weight", 0);
+                weight =1;
                 mom = (float) Math.sqrt(px * px + py * py + pz * pz);
                 phi = Math.atan2((double) py,(double) px);
                 theta = Math.acos((double) pz/(double) mom);
@@ -303,9 +303,10 @@ new File('.', args[0]).eachLine { line ->
                 if(vz > vzmax){vzmax = vz;}
                 
                 // begin cuts
-                if (theta < 5 || theta > 40) {continue;}  
-                if (W < 2) {continue;}
-                if (E_prime < 0.1*en) {continue;}
+                if (theta < 5 || theta > 40) {
+                if (W < 2) {
+                if (E_prime < 0.1*en) {
+                if (Q2 < 1) { System.out.println(xB); } } } }
                 
                 theta_hist_cut.fill(theta);
                 phi_hist_cut.fill(phi);

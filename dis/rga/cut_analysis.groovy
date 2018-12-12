@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import org.jlab.clas.physics.LorentzVector;
 import org.jlab.clas.physics.Vector3;
 import org.jlab.groot.data.H1F;
@@ -6,6 +7,7 @@ import org.jlab.groot.ui.TCanvas;
 import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
 import org.jlab.io.hipo.HipoDataSource;
+
 
 // usage:
 // rungroovy cut_analysis.groovy <mc_data_file.hipo> <rga_data_file.hipo> <energy>
@@ -30,7 +32,7 @@ H1F phi_hist_mc = new H1F("phi_mc", "phi_mc", 100, -phimax, phimax);
 H1F mom_hist_mc = new H1F("momentum mc", "momentum mc", 100, 0, 11);
 H1F W_hist_mc = new H1F("W_mc", "W_mc", 100, 0, wmax+0.5);
 H1F Q2_hist_mc = new H1F("Q2_mc", "Q2_mc", 50, 0, 13);
-H1F xB_hist_mc = new H1F("xB_mc", "xB_mc", 100, 0, 1);
+H1F xB_hist_mc = new H1F("xB_mc", "xB_mc", 50, 0, 1);
 
 // Cut MC reconstructed 1D histos
 H1F theta_hist_mc_cut = new H1F("theta_mc_cut", "theta_mc_cut", 100, 0, thetamax+5);
@@ -38,7 +40,7 @@ H1F phi_hist_mc_cut = new H1F("phi_mc_cut", "phi_mc_cut", 100, -phimax, phimax);
 H1F mom_hist_mc_cut = new H1F("momentum mc_cut_cut", "momentum mc", 100, 0, 11);
 H1F W_hist_mc_cut = new H1F("W_mc_cut", "W_mc_cut", 100, wmin, wmax+0.5);
 H1F Q2_hist_mc_cut = new H1F("Q2_mc_cut", "Q2_mc_cut", 50, 0, 13);
-H1F xB_hist_mc_cut = new H1F("xB_mc_cut", "xB_mc_cut", 100, 0, 1);
+H1F xB_hist_mc_cut = new H1F("xB_mc_cut", "xB_mc_cut", 50, 0, 1);
 
 // The reconstructed 1D histos 
 H1F theta_hist = new H1F("theta", "theta", 50, 0, thetamax+5);
@@ -172,10 +174,11 @@ new File('.', args[0]).eachLine { line ->
         DataEvent event = reader.getNextEvent();
         
          // get MC reconstructed data
-       if ( event.hasBank("RECHB::Particle") && event.hasBank("RECHB::Calorimeter") ) {
-            DataBank bank_mc = event.getBank("RECHB::Particle");
+       if ( event.hasBank("REC::Particle") && event.hasBank("REC::Calorimeter") ) {
+            DataBank bank_mc = event.getBank("REC::Particle");
             DataBank bank_evn_mc = event.getBank("MC::Event");
-            DataBank bank_cal_mc = event.getBank("RECHB::Calorimeter");
+            DataBank bank_cal_mc = event.getBank("REC::Calorimeter");
+            
             
             for (int k = 0; k < bank_mc.rows(); k++) {
                 // get values
@@ -184,8 +187,8 @@ new File('.', args[0]).eachLine { line ->
                 pz_mc = bank_mc.getFloat("pz", k);
                 q_mc = bank_mc.getByte("charge", k);
                 
-                weight = bank_evn_mc.getFloat("weight", 0);
-                
+                //weight = bank_evn_mc.getFloat("weight", 0);
+                weight=1;
                 // calculate values
                 mom_mc = (float) Math.sqrt(px_mc * px_mc + py_mc * py_mc + pz_mc * pz_mc);
                 phi_mc = Math.atan2((double) py_mc,(double) px_mc);
@@ -214,25 +217,27 @@ new File('.', args[0]).eachLine { line ->
                 if(q_mc != -1) continue;
                 
                 // Fill histos
-                theta_hist_mc.fill(theta_mc, weight);
+                theta_hist_mc.fill(theta_mc);
                 theta_hist_mc.setLineColor(3); 
-                phi_hist_mc.fill(phi_mc, weight);
+                phi_hist_mc.fill(phi_mc);
                 phi_hist_mc.setLineColor(3); 
-                mom_hist_mc.fill(mom_mc, weight);
+                mom_hist_mc.fill(mom_mc);
                 mom_hist_mc.setLineColor(3); 
                 
-                W_hist_mc.fill(W_mc, weight);
+                W_hist_mc.fill(W_mc);
                 W_hist_mc.setLineColor(3); 
-                Q2_hist_mc.fill(Q2_mc, weight);
+                Q2_hist_mc.fill(Q2_mc);
                 Q2_hist_mc.setLineColor(3); 
-                xB_hist_mc.fill(xB_mc, weight);
+                xB_hist_mc.fill(xB_mc);
                 xB_hist_mc.setLineColor(3); 
                 
+                
                 // cuts
-                if (theta_mc < 5 || theta_mc > 40) {continue;}  
-                if (W_mc < 2) {continue;}
-                if (Q2_mc < 1) {continue;}
-                if (E_prime_mc < 0.1*en) {continue;}
+                if (theta_mc < 5 || theta_mc > 40 || W_mc < 2 || Q2_mc < 1 || E_prime_mc < 0.2*en) { 
+                   // System.out.println(xB_mc); 
+                    continue; 
+                }
+                
                 
                 cal_row = cal_cut_row(event, k);
                 //System.out.println(j + " " + bank_cal.rows());
@@ -247,18 +252,21 @@ new File('.', args[0]).eachLine { line ->
                     float lw = bank_cal_mc.getFloat("lw",cal_row);
                     
                     if(lu < 350 && lu > 60 && lv < 370 && lw < 390){
-                        theta_hist_mc_cut.fill(theta_mc, weight);
+                        theta_hist_mc_cut.fill(theta_mc);
                         theta_hist_mc_cut.setLineColor(3); 
-                        phi_hist_mc_cut.fill(phi_mc, weight);
+                        phi_hist_mc_cut.fill(phi_mc);
                         phi_hist_mc_cut.setLineColor(3); 
-                        mom_hist_mc_cut.fill(mom_mc, weight);
+                        mom_hist_mc_cut.fill(mom_mc);
                         mom_hist_mc_cut.setLineColor(3); 
                         
-                        W_hist_mc_cut.fill(W_mc, weight);
+                        W_hist_mc_cut.fill(W_mc);
                         W_hist_mc_cut.setLineColor(3); 
-                        Q2_hist_mc_cut.fill(Q2_mc, weight);
+                        Q2_hist_mc_cut.fill(Q2_mc);
                         Q2_hist_mc_cut.setLineColor(3); 
-                        xB_hist_mc_cut.fill(xB_mc, weight);
+                        
+                        if(xB_mc <0 ||xB_mc > 1) {System.out.println("x = " + xB_mc + ", Q2 = " + Q2_mc + ", theta = " + theta_mc + ", E' = " + E_prime_mc);}
+                        
+                        xB_hist_mc_cut.fill(xB_mc);
                         xB_hist_mc_cut.setLineColor(3); 
                     }
                 }
@@ -310,9 +318,9 @@ new File('.', args[1]).eachLine { line ->
         double tot_xsect = 0;
         
         // get reconstructed data
-        if (event.hasBank("RECHB::Particle") && event.hasBank("RECHB::Calorimeter") && event.hasBank("REC::Traj")) {
-            DataBank bank_rec = event.getBank("RECHB::Particle");
-            DataBank bank_cal = event.getBank("RECHB::Calorimeter");
+        if (event.hasBank("REC::Particle") && event.hasBank("REC::Calorimeter") && event.hasBank("REC::Traj")) {
+            DataBank bank_rec = event.getBank("REC::Particle");
+            DataBank bank_cal = event.getBank("REC::Calorimeter");
             DataBank bank_traj = event.getBank("REC::Traj");
             
             //System.out.println("number of bank_rec rows: " + bank_rec.rows() + ", # of gen bank rows: " + bank_gen.rows() );
@@ -375,7 +383,7 @@ new File('.', args[1]).eachLine { line ->
                 if (theta < 5 || theta > 40) {continue;}  
                 if (W < 2) {continue;}
                 if (Q2 < 1) {continue;}
-                if (E_prime < 0.1*en) {continue;}
+                if (E_prime < 0.2*en) {continue;}
                 
                 cal_row = cal_cut_row(event, k);
                 //System.out.println(j + " " + bank_cal.rows());
@@ -445,7 +453,7 @@ boolean dc_cut(float X, float Y, int S){
 }
 
 int cal_cut_row(DataEvent event, int row){
-    DataBank bank_cal = event.getBank("RECHB::Calorimeter");
+    DataBank bank_cal = event.getBank("REC::Calorimeter");
     
     int row_index = 0;
     int cal_row_match = -1;
@@ -539,11 +547,15 @@ can_1d_b.getPad().setLegendPosition(20, 20);
 can_1d_b.cd(4);
 can_1d_b.draw(Q2_hist_cut);
 can_1d_b.draw(Q2_hist_mc_cut,"same"); 
+//Q2_hist_cut.setOptStat(111110);
+Q2_hist_mc_cut.setOptStat(111);
 can_1d_b.getPad().setLegend(true);
 can_1d_b.getPad().setLegendPosition(20, 20);
 can_1d_b.cd(5);
 can_1d_b.draw(xB_hist_cut);
 can_1d_b.draw(xB_hist_mc_cut,"same"); 
+//xB_hist_cut.setOptStat(111110);
+xB_hist_mc_cut.setOptStat(111);
 can_1d_b.getPad().setLegend(true);
 can_1d_b.getPad().setLegendPosition(20, 20);
 can_1d_b.save("figs/cuts/1D_kin_cuts.png");
