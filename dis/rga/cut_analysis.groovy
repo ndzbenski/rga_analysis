@@ -77,7 +77,7 @@ mom_hist_cut.setTitleX("p [GeV]");
 H1F W_hist_cut = new H1F("W_cut", "W_cut", 100, wmin, wmax+0.5);
 W_hist_cut.setTitleX("W_cut [GeV]");
 
-H1F Q2_hist_cut = new H1F("Q2_cut", "Q2_cut", 100, 0, 13);
+H1F Q2_hist_cut = new H1F("Q2_cut", "Q2_cut", 50, 0, 13);
 Q2_hist_cut.setTitleX("Q^2_cut [GeV^2]");
 
 H1F xB_hist_cut = new H1F("xB_cut", "xB_cut", 50, 0, 1);
@@ -547,14 +547,14 @@ can_1d_b.getPad().setLegendPosition(20, 20);
 can_1d_b.cd(4);
 can_1d_b.draw(Q2_hist_cut);
 can_1d_b.draw(Q2_hist_mc_cut,"same"); 
-//Q2_hist_cut.setOptStat(111110);
+Q2_hist_cut.setOptStat(111);
 Q2_hist_mc_cut.setOptStat(111);
 can_1d_b.getPad().setLegend(true);
 can_1d_b.getPad().setLegendPosition(20, 20);
 can_1d_b.cd(5);
 can_1d_b.draw(xB_hist_cut);
 can_1d_b.draw(xB_hist_mc_cut,"same"); 
-//xB_hist_cut.setOptStat(111110);
+xB_hist_cut.setOptStat(111);
 xB_hist_mc_cut.setOptStat(111);
 can_1d_b.getPad().setLegend(true);
 can_1d_b.getPad().setLegendPosition(20, 20);
