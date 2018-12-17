@@ -20,117 +20,120 @@ double phimax = 180;   //degrees
 double vzmax = 50;
 double wmin = 1.8;
 double wmax = 0;
+
 if(en > 7){wmax = 4.5;}
 else if(en > 4){wmax = 4;}
 else {wmax = 2.5;}
 
+int bin_num = 50;
+
 HipoDataSource reader = new HipoDataSource();
 
 // The MC reconstructed 1D histos
-H1F theta_hist_mc = new H1F("theta_mc", "theta_mc", 100, 0, thetamax+5);
-H1F phi_hist_mc = new H1F("phi_mc", "phi_mc", 100, -phimax, phimax);
-H1F mom_hist_mc = new H1F("momentum mc", "momentum mc", 100, 0, 11);
-H1F W_hist_mc = new H1F("W_mc", "W_mc", 100, 0, wmax+0.5);
-H1F Q2_hist_mc = new H1F("Q2_mc", "Q2_mc", 50, 0, 13);
-H1F xB_hist_mc = new H1F("xB_mc", "xB_mc", 50, 0, 1);
+H1F theta_hist_mc = new H1F("theta_mc", "theta_mc", bin_num, 0, thetamax+5);
+H1F phi_hist_mc = new H1F("phi_mc", "phi_mc", bin_num, -phimax, phimax);
+H1F mom_hist_mc = new H1F("momentum mc", "momentum mc", bin_num, 0, 11);
+H1F W_hist_mc = new H1F("W_mc", "W_mc", bin_num, 0, wmax+0.5);
+H1F Q2_hist_mc = new H1F("Q2_mc", "Q2_mc", bin_num, 0, 13);
+H1F xB_hist_mc = new H1F("xB_mc", "xB_mc", bin_num, 0, 1);
 
 // Cut MC reconstructed 1D histos
-H1F theta_hist_mc_cut = new H1F("theta_mc_cut", "theta_mc_cut", 100, 0, thetamax+5);
-H1F phi_hist_mc_cut = new H1F("phi_mc_cut", "phi_mc_cut", 100, -phimax, phimax);
-H1F mom_hist_mc_cut = new H1F("momentum mc_cut_cut", "momentum mc", 100, 0, 11);
-H1F W_hist_mc_cut = new H1F("W_mc_cut", "W_mc_cut", 100, wmin, wmax+0.5);
-H1F Q2_hist_mc_cut = new H1F("Q2_mc_cut", "Q2_mc_cut", 50, 0, 13);
-H1F xB_hist_mc_cut = new H1F("xB_mc_cut", "xB_mc_cut", 50, 0, 1);
+H1F theta_hist_mc_cut = new H1F("theta_mc_cut", "theta_mc_cut", bin_num, 0, thetamax+5);
+H1F phi_hist_mc_cut = new H1F("phi_mc_cut", "phi_mc_cut", bin_num, -phimax, phimax);
+H1F mom_hist_mc_cut = new H1F("momentum mc_cut_cut", "momentum mc", bin_num, 0, 11);
+H1F W_hist_mc_cut = new H1F("W_mc_cut", "W_mc_cut", bin_num, wmin, wmax+0.5);
+H1F Q2_hist_mc_cut = new H1F("Q2_mc_cut", "Q2_mc_cut", bin_num, 0, 13);
+H1F xB_hist_mc_cut = new H1F("xB_mc_cut", "xB_mc_cut", bin_num, 0, 1);
 
 // The reconstructed 1D histos 
-H1F theta_hist = new H1F("theta", "theta", 50, 0, thetamax+5);
+H1F theta_hist = new H1F("theta", "theta", bin_num, 0, thetamax+5);
 theta_hist.setTitleX("theta [deg]");
 
-H1F phi_hist = new H1F("phi", "phi", 100, -phimax, phimax);
+H1F phi_hist = new H1F("phi", "phi", bin_num, -phimax, phimax);
 phi_hist.setTitleX("phi [deg]");
 
-H1F momentum = new H1F("momentum", "momentum", 50, 0, 11);
+H1F momentum = new H1F("momentum", "momentum", bin_num, 0, 11);
 momentum.setTitleX("momentum [GeV]");
 
-H1F W_hist = new H1F("W", "W", 100, 0, wmax+0.5);
+H1F W_hist = new H1F("W", "W", bin_num, 0, wmax+0.5);
 W_hist.setTitleX("W [GeV]");
 
-H1F Q2_hist = new H1F("Q2", "Q2", 50, 0, 13);
+H1F Q2_hist = new H1F("Q2", "Q2", bin_num, 0, 13);
 Q2_hist.setTitleX("Q^2 [GeV^2]");
 
-H1F Eprime_hist = new H1F("Eprime", "E'", 50, 0, 13);
+H1F Eprime_hist = new H1F("Eprime", "E'", bin_num, 0, 13);
 Eprime_hist.setTitleX("E' [GeV]");
 
-H1F xB_hist = new H1F("xB", "xB", 50, 0, 1);
+H1F xB_hist = new H1F("xB", "xB", bin_num, 0, 1);
 xB_hist.setTitleX("xB");
 
 // The 1D histos cuts
-H1F theta_hist_cut = new H1F("theta_cut", "theta_cut", 50, 0, thetamax+5);
+H1F theta_hist_cut = new H1F("theta_cut", "theta_cut", bin_num, 0, thetamax+5);
 theta_hist_cut.setTitleX("theta [deg]");
 
-H1F phi_hist_cut = new H1F("phi_cut", "phi_cut", 100, -phimax, phimax);
+H1F phi_hist_cut = new H1F("phi_cut", "phi_cut", bin_num, -phimax, phimax);
 phi_hist_cut.setTitleX("phi [deg]");
 
-H1F mom_hist_cut = new H1F("momentum_cut", "momentum_cut", 50, 0, 11);
+H1F mom_hist_cut = new H1F("momentum_cut", "momentum_cut", bin_num, 0, 11);
 mom_hist_cut.setTitleX("p [GeV]");
 
-H1F W_hist_cut = new H1F("W_cut", "W_cut", 100, wmin, wmax+0.5);
+H1F W_hist_cut = new H1F("W_cut", "W_cut", bin_num, wmin, wmax+0.5);
 W_hist_cut.setTitleX("W_cut [GeV]");
 
-H1F Q2_hist_cut = new H1F("Q2_cut", "Q2_cut", 50, 0, 13);
+H1F Q2_hist_cut = new H1F("Q2_cut", "Q2_cut", bin_num, 0, 13);
 Q2_hist_cut.setTitleX("Q^2_cut [GeV^2]");
 
-H1F xB_hist_cut = new H1F("xB_cut", "xB_cut", 50, 0, 1);
+H1F xB_hist_cut = new H1F("xB_cut", "xB_cut", bin_num, 0, 1);
 xB_hist_cut.setTitleX("xB_cut");
 
 
 // 2D Histos
-H2F Q2_vs_W = new H2F("Q2_vs_W", "Q2 vs W", 100, wmin, wmax+0.5, 100, 0.0, 13);
+H2F Q2_vs_W = new H2F("Q2_vs_W", "Q2 vs W", bin_num, wmin, wmax+0.5, bin_num, 0.0, 13);
 Q2_vs_W.setTitleX("W [GeV]");
 Q2_vs_W.setTitleY("Q^2 [GeV^2]");
 
-H2F E_vs_Theta = new H2F("E_vs_Theta", "E' vs Theta", 100, 5, thetamax+5, 100, 0, enmax);
+H2F E_vs_Theta = new H2F("E_vs_Theta", "E' vs Theta", bin_num, 5, thetamax+5, bin_num, 0, enmax);
 E_vs_Theta.setTitleX("Theta [deg]");
 E_vs_Theta.setTitleY("E' [GeV]");
 
-H2F Q2_vs_xB = new H2F("Q2_vs_xB", "Q2 vs xB", 100, 0, 1, 100, 0, 13);
+H2F Q2_vs_xB = new H2F("Q2_vs_xB", "Q2 vs xB", bin_num, 0, 1, bin_num, 0, 13);
 Q2_vs_xB.setTitleX("xB");
 Q2_vs_xB.setTitleY("Q^2 [GeV^2]");
 
-H2F W_vs_xB = new H2F("W_vs_xB", "W vs xB", 100, 0, 0.81, 100, wmin, wmax+0.5);
+H2F W_vs_xB = new H2F("W_vs_xB", "W vs xB", bin_num, 0, 0.81, bin_num, wmin, wmax+0.5);
 W_vs_xB.setTitleX("xB");
 W_vs_xB.setTitleY("W [GeV]");
 
-H2F Phi_vs_W = new H2F("Phi_vs_W", "Phi_vs_W", 150, wmin, wmax, 500, -phimax, phimax);
+H2F Phi_vs_W = new H2F("Phi_vs_W", "Phi_vs_W", bin_num, wmin, wmax, bin_num, -phimax, phimax);
 Phi_vs_W.setTitleX("W [GeV]");
 Phi_vs_W.setTitleY("Phi [deg]");
 
-H2F xsect_vs_xB = new H2F("xsect_vs_xB", "generating #sigma vs xB", 150, 0.0, 0.81, 150, -1, 150);
+H2F xsect_vs_xB = new H2F("xsect_vs_xB", "generating #sigma vs xB", bin_num, 0.0, 0.81, bin_num, -1, 150);
 xsect_vs_xB.setTitleX("xB");
 xsect_vs_xB.setTitleY("#sigma");
 
 
 // For pre-fiducial cuts
-H2F Cal_y_vs_x_precut = new H2F("Cal_y_vs_x_precut", "Cal_y_vs_x_precut", 100, -450,450, 100, -450,450);
+H2F Cal_y_vs_x_precut = new H2F("Cal_y_vs_x_precut", "Cal_y_vs_x_precut", bin_num, -450,450, bin_num, -450,450);
 Cal_y_vs_x_precut.setTitleX("X [cm]");
 Cal_y_vs_x_precut.setTitleY("Y [cm]");
 
-H1F Cal_lu_precut = new H1F("Cal_lu", "Cal_lu_precut", 50, 0, 450);
+H1F Cal_lu_precut = new H1F("Cal_lu", "Cal_lu_precut", bin_num, 0, 450);
 Cal_lu_precut.setTitleX("Cal_lu_precut [cm]");
-H1F Cal_lv_precut = new H1F("Cal_lv", "Cal_lv_precut", 50, 0, 450);
+H1F Cal_lv_precut = new H1F("Cal_lv", "Cal_lv_precut", bin_num, 0, 450);
 Cal_lv_precut.setTitleX("Cal_lv_precut [cm]");
-H1F Cal_lw_precut = new H1F("Cal_lw", "Cal_lw_precut", 50, 0, 450);
+H1F Cal_lw_precut = new H1F("Cal_lw", "Cal_lw_precut", bin_num, 0, 450);
 Cal_lw_precut.setTitleX("Cal_lw_precut [cm]");
 
 // fiducial cuts
-H1F Cal_lu = new H1F("Cal_lu", "Cal_lu", 50, 0, 450);
+H1F Cal_lu = new H1F("Cal_lu", "Cal_lu", bin_num, 0, 450);
 Cal_lu.setTitleX("Cal_lu_cut [cm]");
-H1F Cal_lv = new H1F("Cal_lv", "Cal_lv", 50, 0, 450);
+H1F Cal_lv = new H1F("Cal_lv", "Cal_lv", bin_num, 0, 450);
 Cal_lv.setTitleX("Cal_lv_cut [cm]");
-H1F Cal_lw = new H1F("Cal_lw", "Cal_lw", 50, 0, 450);
+H1F Cal_lw = new H1F("Cal_lw", "Cal_lw", bin_num, 0, 450);
 Cal_lw.setTitleX("Cal_lw_cut [cm]");
 
-H2F Cal_y_vs_x = new H2F("Cal_y_vs_x", "Cal_y_vs_x", 100, -450,450, 100, -450, 450);
+H2F Cal_y_vs_x = new H2F("Cal_y_vs_x", "Cal_y_vs_x", bin_num, -450,450, bin_num, -450, 450);
 Cal_y_vs_x.setTitleX("X [cm]");
 Cal_y_vs_x.setTitleY("Y [cm]");
 
@@ -263,9 +266,6 @@ new File('.', args[0]).eachLine { line ->
                         W_hist_mc_cut.setLineColor(3); 
                         Q2_hist_mc_cut.fill(Q2_mc);
                         Q2_hist_mc_cut.setLineColor(3); 
-                        
-                        if(xB_mc <0 ||xB_mc > 1) {System.out.println("x = " + xB_mc + ", Q2 = " + Q2_mc + ", theta = " + theta_mc + ", E' = " + E_prime_mc);}
-                        
                         xB_hist_mc_cut.fill(xB_mc);
                         xB_hist_mc_cut.setLineColor(3); 
                     }
@@ -275,6 +275,15 @@ new File('.', args[0]).eachLine { line ->
         }// end if 
     } // end event
 } // end open MC data file
+
+// normalization of MC histos
+theta_hist_mc_cut.normalize(theta_hist_mc_cut.integral());
+phi_hist_mc_cut.normalize(phi_hist_mc_cut.integral());
+mom_hist_mc_cut.normalize(mom_hist_mc_cut.integral());
+
+W_hist_mc_cut.normalize(W_hist_mc_cut.integral());
+Q2_hist_mc_cut.normalize(Q2_hist_mc_cut.integral());
+xB_hist_mc_cut.normalize(xB_hist_mc_cut.integral());
 
 // open the RGA data file
 new File('.', args[1]).eachLine { line ->
@@ -443,6 +452,16 @@ new File('.', args[1]).eachLine { line ->
     } // end while
     
 } // end open file
+
+// normalization of RGA histograms
+theta_hist_cut.normalize(theta_hist_cut.integral());
+phi_hist_cut.normalize(phi_hist_cut.integral());
+mom_hist_cut.normalize(mom_hist_cut.integral());
+
+W_hist_cut.normalize(W_hist_cut.integral());
+Q2_hist_cut.normalize(Q2_hist_cut.integral());
+xB_hist_cut.normalize(xB_hist_cut.integral());
+
 
 boolean dc_cut(float X, float Y, int S){
     boolean result= false;
