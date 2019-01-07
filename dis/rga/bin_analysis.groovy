@@ -30,112 +30,33 @@ int bin_num = 50;
 HipoDataSource reader = new HipoDataSource();
 
 // The MC reconstructed 1D histos
-H1F theta_hist_mc = new H1F("theta_mc", "theta_mc", bin_num, 0, thetamax+5);
-H1F phi_hist_mc = new H1F("phi_mc", "phi_mc", bin_num, -phimax, phimax);
-H1F mom_hist_mc = new H1F("momentum mc", "momentum mc", bin_num, 0, 11);
-H1F W_hist_mc = new H1F("W_mc", "W_mc", bin_num, 0, wmax+0.5);
-H1F Q2_hist_mc = new H1F("Q2_mc", "Q2_mc", bin_num, 0, 13);
-H1F xB_hist_mc = new H1F("xB_mc", "xB_mc", bin_num, 0, 1);
+H1F W_bin_1_mc = new H1F("W_bin_1_mc", "W_bin_1_mc", bin_num, wmin, wmax+0.5);
+H1F W_bin_2_mc = new H1F("W_bin_2_mc", "W_bin_2_mc", bin_num, wmin, wmax+0.5);
+H1F W_bin_3_mc = new H1F("W_bin_3_mc", "W_bin_3_mc", bin_num, wmin, wmax+0.5);
+H1F W_bin_4_mc = new H1F("W_bin_4_mc", "W_bin_4_mc", bin_num, wmin, wmax+0.5);
+H1F W_bin_5_mc = new H1F("W_bin_5_mc", "W_bin_5_mc", bin_num, wmin, wmax+0.5);
+H1F W_bin_6_mc = new H1F("W_bin_6_mc", "W_bin_6_mc", bin_num, wmin, wmax+0.5);
 
-// Cut MC reconstructed 1D histos
-H1F theta_hist_mc_cut = new H1F("theta_mc_cut", "theta_mc_cut", bin_num, 0, thetamax+5);
-H1F phi_hist_mc_cut = new H1F("phi_mc_cut", "phi_mc_cut", bin_num, -phimax, phimax);
-H1F mom_hist_mc_cut = new H1F("momentum mc_cut_cut", "momentum mc", bin_num, 0, 11);
-H1F W_hist_mc_cut = new H1F("W_mc_cut", "W_mc_cut", bin_num, wmin, wmax+0.5);
-H1F Q2_hist_mc_cut = new H1F("Q2_mc_cut", "Q2_mc_cut", bin_num, 0, 13);
-H1F xB_hist_mc_cut = new H1F("xB_mc_cut", "xB_mc_cut", bin_num, 0, 1);
+
 
 // The reconstructed 1D histos 
-H1F theta_hist = new H1F("theta", "theta", bin_num, 0, thetamax+5);
-theta_hist.setTitleX("theta [deg]");
+H1F W_bin_1 = new H1F("W_bin_1", "W_bin_1", bin_num, wmin, wmax+0.5);
+W_bin_1.setTitleX("W [GeV]");
 
-H1F phi_hist = new H1F("phi", "phi", bin_num, -phimax, phimax);
-phi_hist.setTitleX("phi [deg]");
+H1F W_bin_2 = new H1F("W_bin_2", "W_bin_2", bin_num, wmin, wmax+0.5);
+W_bin_2.setTitleX("W [GeV]");
 
-H1F momentum = new H1F("momentum", "momentum", bin_num, 0, 11);
-momentum.setTitleX("momentum [GeV]");
+H1F W_bin_3 = new H1F("W_bin_3", "W_bin_3", bin_num, wmin, wmax+0.5);
+W_bin_3.setTitleX("W [GeV]");
 
-H1F W_hist = new H1F("W", "W", bin_num, 0, wmax+0.5);
-W_hist.setTitleX("W [GeV]");
+H1F W_bin_4 = new H1F("W_bin_4", "W_bin_4", bin_num, wmin, wmax+0.5);
+W_bin_4.setTitleX("W [GeV]");
 
-H1F Q2_hist = new H1F("Q2", "Q2", bin_num, 0, 13);
-Q2_hist.setTitleX("Q^2 [GeV^2]");
+H1F W_bin_5 = new H1F("W_bin_5", "W_bin_5", bin_num, wmin, wmax+0.5);
+W_bin_5.setTitleX("W [GeV]");
 
-H1F Eprime_hist = new H1F("Eprime", "E'", bin_num, 0, 13);
-Eprime_hist.setTitleX("E' [GeV]");
-
-H1F xB_hist = new H1F("xB", "xB", bin_num, 0, 1);
-xB_hist.setTitleX("xB");
-
-// The 1D histos cuts
-H1F theta_hist_cut = new H1F("theta_cut", "theta_cut", bin_num, 0, thetamax+5);
-theta_hist_cut.setTitleX("theta [deg]");
-
-H1F phi_hist_cut = new H1F("phi_cut", "phi_cut", bin_num, -phimax, phimax);
-phi_hist_cut.setTitleX("phi [deg]");
-
-H1F mom_hist_cut = new H1F("momentum_cut", "momentum_cut", bin_num, 0, 11);
-mom_hist_cut.setTitleX("p [GeV]");
-
-H1F W_hist_cut = new H1F("W_cut", "W_cut", bin_num, wmin, wmax+0.5);
-W_hist_cut.setTitleX("W_cut [GeV]");
-
-H1F Q2_hist_cut = new H1F("Q2_cut", "Q2_cut", bin_num, 0, 13);
-Q2_hist_cut.setTitleX("Q^2_cut [GeV^2]");
-
-H1F xB_hist_cut = new H1F("xB_cut", "xB_cut", bin_num, 0, 1);
-xB_hist_cut.setTitleX("xB_cut");
-
-
-// 2D Histos
-H2F Q2_vs_W = new H2F("Q2_vs_W", "Q2 vs W", bin_num, wmin, wmax+0.5, bin_num, 0.0, 13);
-Q2_vs_W.setTitleX("W [GeV]");
-Q2_vs_W.setTitleY("Q^2 [GeV^2]");
-
-H2F E_vs_Theta = new H2F("E_vs_Theta", "E' vs Theta", bin_num, 5, thetamax+5, bin_num, 0, enmax);
-E_vs_Theta.setTitleX("Theta [deg]");
-E_vs_Theta.setTitleY("E' [GeV]");
-
-H2F Q2_vs_xB = new H2F("Q2_vs_xB", "Q2 vs xB", bin_num, 0, 1, bin_num, 0, 13);
-Q2_vs_xB.setTitleX("xB");
-Q2_vs_xB.setTitleY("Q^2 [GeV^2]");
-
-H2F W_vs_xB = new H2F("W_vs_xB", "W vs xB", bin_num, 0, 0.81, bin_num, wmin, wmax+0.5);
-W_vs_xB.setTitleX("xB");
-W_vs_xB.setTitleY("W [GeV]");
-
-H2F Phi_vs_W = new H2F("Phi_vs_W", "Phi_vs_W", bin_num, wmin, wmax, bin_num, -phimax, phimax);
-Phi_vs_W.setTitleX("W [GeV]");
-Phi_vs_W.setTitleY("Phi [deg]");
-
-H2F xsect_vs_xB = new H2F("xsect_vs_xB", "generating #sigma vs xB", bin_num, 0.0, 0.81, bin_num, -1, 150);
-xsect_vs_xB.setTitleX("xB");
-xsect_vs_xB.setTitleY("#sigma");
-
-
-// For pre-fiducial cuts
-H2F Cal_y_vs_x_precut = new H2F("Cal_y_vs_x_precut", "Cal_y_vs_x_precut", bin_num, -450,450, bin_num, -450,450);
-Cal_y_vs_x_precut.setTitleX("X [cm]");
-Cal_y_vs_x_precut.setTitleY("Y [cm]");
-
-H1F Cal_lu_precut = new H1F("Cal_lu", "Cal_lu_precut", bin_num, 0, 450);
-Cal_lu_precut.setTitleX("Cal_lu_precut [cm]");
-H1F Cal_lv_precut = new H1F("Cal_lv", "Cal_lv_precut", bin_num, 0, 450);
-Cal_lv_precut.setTitleX("Cal_lv_precut [cm]");
-H1F Cal_lw_precut = new H1F("Cal_lw", "Cal_lw_precut", bin_num, 0, 450);
-Cal_lw_precut.setTitleX("Cal_lw_precut [cm]");
-
-// fiducial cuts
-H1F Cal_lu = new H1F("Cal_lu", "Cal_lu", bin_num, 0, 450);
-Cal_lu.setTitleX("Cal_lu_cut [cm]");
-H1F Cal_lv = new H1F("Cal_lv", "Cal_lv", bin_num, 0, 450);
-Cal_lv.setTitleX("Cal_lv_cut [cm]");
-H1F Cal_lw = new H1F("Cal_lw", "Cal_lw", bin_num, 0, 450);
-Cal_lw.setTitleX("Cal_lw_cut [cm]");
-
-H2F Cal_y_vs_x = new H2F("Cal_y_vs_x", "Cal_y_vs_x", bin_num, -450,450, bin_num, -450, 450);
-Cal_y_vs_x.setTitleX("X [cm]");
-Cal_y_vs_x.setTitleY("Y [cm]");
+H1F W_bin_6 = new H1F("W_bin_6", "W_bin_6", bin_num, wmin, wmax+0.5);
+W_bin_6.setTitleX("W [GeV]");
 
 
 double e_mass = 0.000511;
@@ -215,28 +136,12 @@ new File('.', args[0]).eachLine { line ->
                 E_prime_mc = e_vec_prime_mc.e();
                 xB_mc = Q2_mc/(2.0*p_mass*(en-E_prime_mc));
                 
-                //Q2_mc = 4*en*E_prime_mc*Math.pow((Math.sin(theta_mc/2.0)),2);
+                //Q2_mc = 4*en*E_prime_mc*pow((sin(theta_mc/2.0)),2);
                 
                 theta_mc *= 180/Math.PI;
                 phi_mc *= 180/Math.PI;
                 
                 if(q_mc != -1) continue;
-                
-                // Fill histos
-                theta_hist_mc.fill(theta_mc);
-                theta_hist_mc.setLineColor(3); 
-                phi_hist_mc.fill(phi_mc);
-                phi_hist_mc.setLineColor(3); 
-                mom_hist_mc.fill(mom_mc);
-                mom_hist_mc.setLineColor(3); 
-                
-                W_hist_mc.fill(W_mc);
-                W_hist_mc.setLineColor(3); 
-                Q2_hist_mc.fill(Q2_mc);
-                Q2_hist_mc.setLineColor(3); 
-                xB_hist_mc.fill(xB_mc);
-                xB_hist_mc.setLineColor(3); 
-                
                 
                 // cuts
                 if (theta_mc < 5 || theta_mc > 40 || W_mc < 2 || Q2_mc < 1 || E_prime_mc < 0.1*en) { 
@@ -258,19 +163,31 @@ new File('.', args[0]).eachLine { line ->
                     float lw = bank_cal_mc.getFloat("lw",cal_row);
                     
                     if(lu < 350 && lu > 60 && lv < 370 && lw < 390){
-                        theta_hist_mc_cut.fill(theta_mc);
-                        theta_hist_mc_cut.setLineColor(3); 
-                        phi_hist_mc_cut.fill(phi_mc);
-                        phi_hist_mc_cut.setLineColor(3); 
-                        mom_hist_mc_cut.fill(mom_mc);
-                        mom_hist_mc_cut.setLineColor(3); 
-                        
-                        W_hist_mc_cut.fill(W_mc);
-                        W_hist_mc_cut.setLineColor(3); 
-                        Q2_hist_mc_cut.fill(Q2_mc);
-                        Q2_hist_mc_cut.setLineColor(3); 
-                        xB_hist_mc_cut.fill(xB_mc);
-                        xB_hist_mc_cut.setLineColor(3); 
+                        // binning
+                        if(xB_mc < 0.15 && Q2_mc < 2){
+                            W_bin_1_mc.fill(W_mc);
+                            W_bin_1_mc.setLineColor(3); 
+                        }
+                        if(xB_mc > 0.15 && xB_mc < 0.2 && Q2_mc > 2 && Q2_mc < 2.5){
+                            W_bin_2_mc.fill(W_mc);
+                            W_bin_2_mc.setLineColor(3);
+                        }
+                        if(xB_mc > 0.2 && xB_mc < 0.27 && Q2_mc > 2.5 && Q2_mc < 3){
+                            W_bin_3_mc.fill(W_mc);
+                            W_bin_3_mc.setLineColor(3);
+                        }
+                        if(xB_mc > 0.27 && xB_mc < 0.4 && Q2_mc > 3 && Q2_mc < 3.75){
+                            W_bin_4_mc.fill(W_mc);
+                            W_bin_4_mc.setLineColor(3);
+                        }
+                        if(xB_mc > 0.4 && xB_mc < 0.6 && Q2_mc > 3.75 && Q2_mc < 4.5){
+                            W_bin_5_mc.fill(W_mc);
+                            W_bin_5_mc.setLineColor(3);
+                        }
+                        if(xB_mc > 0.6 && Q2_mc > 4.5){
+                            W_bin_6_mc.fill(W_mc);
+                            W_bin_6_mc.setLineColor(3);
+                        }
                     }
                 }
                 
@@ -280,13 +197,12 @@ new File('.', args[0]).eachLine { line ->
 } // end open MC data file
 
 // normalization of MC histos
-theta_hist_mc_cut.normalize(theta_hist_mc_cut.integral());
-phi_hist_mc_cut.normalize(phi_hist_mc_cut.integral());
-mom_hist_mc_cut.normalize(mom_hist_mc_cut.integral());
-
-W_hist_mc_cut.normalize(W_hist_mc_cut.integral());
-Q2_hist_mc_cut.normalize(Q2_hist_mc_cut.integral());
-xB_hist_mc_cut.normalize(xB_hist_mc_cut.integral());
+W_bin_1_mc.normalize(W_bin_1_mc.integral());
+W_bin_2_mc.normalize(W_bin_2_mc.integral());
+W_bin_3_mc.normalize(W_bin_3_mc.integral());
+W_bin_4_mc.normalize(W_bin_4_mc.integral());
+W_bin_5_mc.normalize(W_bin_5_mc.integral());
+W_bin_6_mc.normalize(W_bin_6_mc.integral());
 
 // open the RGA data file
 new File('.', args[1]).eachLine { line ->
@@ -373,20 +289,10 @@ new File('.', args[1]).eachLine { line ->
                 E_prime = e_vec_prime.e();
                 xB = Q2/(2.0*p_mass*(en-E_prime));
                 
-                //Q2 = 4*en*E_prime*Math.pow((Math.sin(theta/2.0)),2);
+                //Q2 = 4*en*E_prime*pow((sin(theta/2.0)),2);
                 
                 theta *= 180/Math.PI;
                 phi *= 180/Math.PI;
-                
-                theta_hist.fill(theta);
-                phi_hist.fill(phi);
-                momentum.fill(mom);
-                
-                xB_hist.fill(xB);
-                W_hist.fill(W);
-                Q2_hist.fill(Q2);
-                
-                Eprime_hist.fill(E_prime);
                 
                 // Calculate max values of each param
                 if(e_vec_prime.e()>emax){emax = e_vec_prime.e();} 
@@ -398,7 +304,7 @@ new File('.', args[1]).eachLine { line ->
                 if (theta < 5 || theta > 40) {continue;}  
                 if (W < 2) {continue;}
                 if (Q2 < 1) {continue;}
-                if (E_prime < 0.1*en) {continue;}
+                //if (E_prime < 0.2*en) {continue;}
                 
                 cal_row = cal_cut_row(event, k);
                 //System.out.println(j + " " + bank_cal.rows());
@@ -412,30 +318,28 @@ new File('.', args[1]).eachLine { line ->
                     float lv = bank_cal.getFloat("lv",cal_row);
                     float lw = bank_cal.getFloat("lw",cal_row);
                     
-                    Cal_y_vs_x_precut.fill(x_cal,y_cal);
-                    Cal_lu_precut.fill(lu);
-                    Cal_lv_precut.fill(lv);
-                    Cal_lw_precut.fill(lw);
                     
                     if(lu < 350 && lu > 60 && lv < 370 && lw < 390){
-                        Cal_lu.fill(lu);
-                        Cal_lv.fill(lv);
-                        Cal_lw.fill(lw);
-                        Cal_y_vs_x.fill(x_cal,y_cal);
                         
-                        theta_hist_cut.fill(theta);
-                        phi_hist_cut.fill(phi);
-                        mom_hist_cut.fill(mom);
-                            
-                        W_hist_cut.fill(W);
-                        Q2_hist_cut.fill(Q2);
-                        xB_hist_cut.fill(xB);
-                        
-                        Q2_vs_W.fill(W,Q2);
-                        Phi_vs_W.fill(W,phi);
-                        E_vs_Theta.fill(theta,e_vec_prime.e());
-                        Q2_vs_xB.fill(xB,Q2);
-                        W_vs_xB.fill(xB,W);
+                        // binning
+                        if(xB < 0.15 && Q2 < 2){
+                            W_bin_1.fill(W);
+                        }
+                        if(xB > 0.15 && xB < 0.2 && Q2 > 2 && Q2 < 2.5){
+                            W_bin_2.fill(W);
+                        }
+                        if(xB > 0.2 && xB < 0.27 && Q2 > 2.5 && Q2 < 3){
+                            W_bin_3.fill(W);
+                        }
+                        if(xB > 0.27 && xB < 0.4 && Q2 > 3 && Q2 < 3.75){
+                            W_bin_4.fill(W);
+                        }
+                        if(xB > 0.4 && xB < 0.6 && Q2 > 3.75 && Q2 < 4.5){
+                            W_bin_5.fill(W);
+                        }
+                        if(xB > 0.6 && Q2 > 4.5){
+                            W_bin_6.fill(W);
+                        }
                     }
                 }
                 
@@ -460,14 +364,12 @@ new File('.', args[1]).eachLine { line ->
 } // end open file
 
 // normalization of RGA histograms
-theta_hist_cut.normalize(theta_hist_cut.integral());
-phi_hist_cut.normalize(phi_hist_cut.integral());
-mom_hist_cut.normalize(mom_hist_cut.integral());
-
-W_hist_cut.normalize(W_hist_cut.integral());
-Q2_hist_cut.normalize(Q2_hist_cut.integral());
-xB_hist_cut.normalize(xB_hist_cut.integral());
-
+W_bin_1.normalize(W_bin_1.integral());
+W_bin_2.normalize(W_bin_2.integral());
+W_bin_3.normalize(W_bin_3.integral());
+W_bin_4.normalize(W_bin_4.integral());
+W_bin_5.normalize(W_bin_5.integral());
+W_bin_6.normalize(W_bin_6.integral());
 
 boolean dc_cut(float X, float Y, int S){
     boolean result= false;
@@ -512,115 +414,36 @@ int dc_cut_row(DataEvent event, int row){
 }
 
 TCanvas can_1d_a = new TCanvas("can", 1100, 600);
-can_1d_a.setTitle("Theta, phi & mom cuts");
+can_1d_a.setTitle("W binned");
 can_1d_a.divide(3,2);
 can_1d_a.cd(0);
-can_1d_a.draw(theta_hist);
-can_1d_a.draw(theta_hist_mc,"same");
+can_1d_a.draw(W_bin_1);
+can_1d_a.draw(W_bin_1_mc,"same");
 can_1d_a.getPad().setLegend(true);
 can_1d_a.getPad().setLegendPosition(20, 20);
 can_1d_a.cd(1);
-can_1d_a.draw(phi_hist);
-can_1d_a.draw(phi_hist_mc,"same");
+can_1d_a.draw(W_bin_2);
+can_1d_a.draw(W_bin_2_mc,"same");
 can_1d_a.getPad().setLegend(true);
 can_1d_a.getPad().setLegendPosition(20, 20);
 can_1d_a.cd(2);
-can_1d_a.draw(momentum);
-can_1d_a.draw(mom_hist_mc,"same");
+can_1d_a.draw(W_bin_3);
+can_1d_a.draw(W_bin_3_mc,"same");
 can_1d_a.getPad().setLegend(true);
 can_1d_a.getPad().setLegendPosition(20, 20);
 can_1d_a.cd(3);
-can_1d_a.draw(theta_hist_cut);
-can_1d_a.draw(theta_hist_mc_cut,"same");
+can_1d_a.draw(W_bin_4);
+can_1d_a.draw(W_bin_4_mc,"same");
 can_1d_a.getPad().setLegend(true);
 can_1d_a.getPad().setLegendPosition(20, 20);
 can_1d_a.cd(4);
-can_1d_a.draw(phi_hist_cut);
-can_1d_a.draw(phi_hist_mc_cut,"same");
+can_1d_a.draw(W_bin_5);
+can_1d_a.draw(W_bin_5_mc,"same");
 can_1d_a.getPad().setLegend(true);
 can_1d_a.getPad().setLegendPosition(20, 20);
 can_1d_a.cd(5);
-can_1d_a.draw(mom_hist_cut);
-can_1d_a.draw(mom_hist_mc_cut,"same");
+can_1d_a.draw(W_bin_6);
+can_1d_a.draw(W_bin_6_mc,"same");
 can_1d_a.getPad().setLegend(true);
 can_1d_a.getPad().setLegendPosition(20, 20);
-can_1d_a.save("figs/cuts/1D_angle_cuts.png");
-
-TCanvas can_1d_b = new TCanvas("can", 1100, 600);
-can_1d_b.setTitle("W, Q2, xB resolutions");
-can_1d_b.divide(3,2);
-can_1d_b.cd(0);
-can_1d_b.draw(W_hist); 
-can_1d_b.draw(W_hist_mc,"same"); 
-can_1d_b.getPad().setLegend(true);
-can_1d_b.getPad().setLegendPosition(20, 20);
-can_1d_b.cd(1);
-can_1d_b.draw(Q2_hist);
-can_1d_b.draw(Q2_hist_mc,"same"); 
-can_1d_b.getPad().setLegend(true);
-can_1d_b.getPad().setLegendPosition(20, 20);
-can_1d_b.cd(2);
-can_1d_b.draw(xB_hist);
-can_1d_b.draw(xB_hist_mc,"same"); 
-can_1d_b.getPad().setLegend(true);
-can_1d_b.getPad().setLegendPosition(20, 20);
-can_1d_b.cd(3);
-can_1d_b.draw(W_hist_cut);
-can_1d_b.draw(W_hist_mc_cut,"same"); 
-can_1d_b.getPad().setLegend(true);
-can_1d_b.getPad().setLegendPosition(20, 20);
-can_1d_b.cd(4);
-can_1d_b.draw(Q2_hist_cut);
-can_1d_b.draw(Q2_hist_mc_cut,"same"); 
-Q2_hist_cut.setOptStat(111);
-Q2_hist_mc_cut.setOptStat(111);
-can_1d_b.getPad().setLegend(true);
-can_1d_b.getPad().setLegendPosition(20, 20);
-can_1d_b.cd(5);
-can_1d_b.draw(xB_hist_cut);
-can_1d_b.draw(xB_hist_mc_cut,"same"); 
-xB_hist_cut.setOptStat(111);
-xB_hist_mc_cut.setOptStat(111);
-can_1d_b.getPad().setLegend(true);
-can_1d_b.getPad().setLegendPosition(20, 20);
-can_1d_b.save("figs/cuts/1D_kin_cuts.png");
-
-TCanvas can_2d_a = new TCanvas("can", 1100, 600);
-can_2d_a.divide(2,2);
-can_2d_a.cd(0);
-can_2d_a.draw(Q2_vs_W);
-can_2d_a.cd(1);
-can_2d_a.draw(E_vs_Theta);
-can_2d_a.cd(2);
-can_2d_a.draw(Q2_vs_xB);
-can_2d_a.cd(3);
-can_2d_a.draw(W_vs_xB);
-can_2d_a.save("figs/cuts/2d_spectra_cuts.png");
-
-TCanvas can_2d_b = new TCanvas("can", 1100, 600);
-can_2d_b.divide(4,2);
-can_2d_b.cd(0);
-can_2d_b.draw(Cal_lu_precut);
-can_2d_b.cd(1);
-can_2d_b.draw(Cal_lv_precut);
-can_2d_b.cd(2);
-can_2d_b.draw(Cal_lw_precut);
-can_2d_b.cd(3);
-can_2d_b.draw(Cal_y_vs_x_precut);
-can_2d_b.cd(4);
-can_2d_b.draw(Cal_lu);
-can_2d_b.cd(5);
-can_2d_b.draw(Cal_lv);
-can_2d_b.cd(6);
-can_2d_b.draw(Cal_lw);
-can_2d_b.cd(7);
-can_2d_b.draw(Cal_y_vs_x);
-can_2d_b.save("figs/cuts/2d_ecal.png");
-
-/*
-HashMap<Integer,TCanvas> canvasmap = new HashMap<Integer,TCanvas>();
-for(int i : histmap.keySet()){
-canvasmap.put(i, new TCanvas("can", 800,600));
-canvasmap.get(i).draw(histmap.get(i));
-canvasmap.get(i).save("phivstheta" + i + ".png");
-}*/
+can_1d_a.save("figs/bins/W_binned.png");

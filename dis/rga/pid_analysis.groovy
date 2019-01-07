@@ -22,57 +22,59 @@ if(en > 7){wmax = 4.5;}
 else if(en > 4){wmax = 4;}
 else {wmax = 2.5;}
 
+int bin_num = 100;
+
 HipoDataSource reader = new HipoDataSource();
 
 // 1D MC spectra
-H1F h_eprime_mc = new H1F("h_eprime_mc", "E'_mc", 20,0,9);
-H1F h_epcal_mc = new H1F("h_epcal_mc", "E_{PCAL}_mc", 50,0,2);
-H1F h_ecin_mc = new H1F("h_ecin_mc", "E_{ECin}_mc", 50,0,1);
-H1F h_ecout_mc = new H1F("h_ecout_mc", "E_{ECout}_mc", 50,0,0.2);
-H1F h_ectot_mc = new H1F("h_ectot_mc", "E_{ECtot}_mc", 50,0,1.5);
+H1F h_eprime_mc = new H1F("h_eprime_mc", "E'_mc", bin_num,0,9);
+H1F h_epcal_mc = new H1F("h_epcal_mc", "E_{PCAL}_mc", bin_num,0,2);
+H1F h_ecin_mc = new H1F("h_ecin_mc", "E_{ECin}_mc", bin_num,0,1);
+H1F h_ecout_mc = new H1F("h_ecout_mc", "E_{ECout}_mc", bin_num,0,0.2);
+H1F h_ectot_mc = new H1F("h_ectot_mc", "E_{ECtot}_mc", bin_num,0,1.5);
 H1F h_nphe_mc = new H1F("h_nphe_mc", "nphe_mc", 50,0,50);
 
 // 1D spectra
-H1F h_eprime = new H1F("h_eprime", "E'", 20,0,9);
+H1F h_eprime = new H1F("h_eprime", "E'", bin_num,0,9);
 h_eprime.setTitleX("E' [GeV]");
 
-H1F h_epcal = new H1F("h_epcal", "E_{PCAL}", 50,0,2);
+H1F h_epcal = new H1F("h_epcal", "E_{PCAL}", bin_num,0,2);
 h_epcal.setTitleX("E_{pcal} [GeV]");
 
-H1F h_ecin = new H1F("h_ecin", "E_{ECin}", 50,0,1);
+H1F h_ecin = new H1F("h_ecin", "E_{ECin}", bin_num,0,1);
 h_ecin.setTitleX("E_{ECin} [GeV]");
 
-H1F h_ecout = new H1F("h_ecout", "E_{ECout}", 50,0,0.2);
+H1F h_ecout = new H1F("h_ecout", "E_{ECout}", bin_num,0,0.2);
 h_ecout.setTitleX("E_{ECout} [GeV]");
 
-H1F h_ectot = new H1F("h_ectot", "E_{ECtot}", 50,0,1.5);
+H1F h_ectot = new H1F("h_ectot", "E_{ECtot}", bin_num,0,1.5);
 h_ectot.setTitleX("E_{ECtot} [GeV]");
 
 H1F h_nphe = new H1F("h_nphe", "nphe", 50,0,50);
 h_nphe.setTitleX("nphe");
 
 // 2D Histos
-H2F EC_vs_PCAL = new H2F("EC_vs_PCAL", "EC_{tot} vs E_{pcal}", 100, 0, 1.2, 100, 0, 1);
+H2F EC_vs_PCAL = new H2F("EC_vs_PCAL", "EC_{tot} vs E_{pcal}", bin_num, 0, 1.2, bin_num, 0, 1);
 EC_vs_PCAL.setTitleX("E_{PCAL} [GeV]");
 EC_vs_PCAL.setTitleY("EC_{in} + EC_{out} [GeV]");
 
-H2F EC_vs_PCAL_cut = new H2F("EC_vs_PCAL_cut", "EC_{tot} vs E_{pcal} cut", 100, 0, 1.2, 100, 0, 1);
+H2F EC_vs_PCAL_cut = new H2F("EC_vs_PCAL_cut", "EC_{tot} vs E_{pcal} cut", bin_num, 0, 1.2, bin_num, 0, 1);
 EC_vs_PCAL_cut.setTitleX("E_{PCAL} [GeV]");
 EC_vs_PCAL_cut.setTitleY("EC_{in} + EC_{out} [GeV]");
 
-H2F Etot_vs_p = new H2F("Etot_vs_p", "E_{tot}/p vs p", 100, 0, 8, 100, 0, 1);
+H2F Etot_vs_p = new H2F("Etot_vs_p", "E_{tot}/p vs p", bin_num, 0, 8, bin_num, 0, 1);
 Etot_vs_p.setTitleX("p [GeV]");
 Etot_vs_p.setTitleY("E_tot/p");
 
-H2F Etot_vs_p_cut = new H2F("Etot_vs_p_cut", "E_{tot}/p vs p cut", 100, 0, 8, 100, 0, 1);
+H2F Etot_vs_p_cut = new H2F("Etot_vs_p_cut", "E_{tot}/p vs p cut", bin_num, 0, 8, bin_num, 0, 1);
 Etot_vs_p_cut.setTitleX("p [GeV]");
 Etot_vs_p_cut.setTitleY("E_tot/p");
 
-H2F beta_vs_p = new H2F ("beta_vs_p", "beta vs p", 100, 0, 10, 100, 0, 1.5);
+H2F beta_vs_p = new H2F ("beta_vs_p", "beta vs p", bin_num, 0, 10, bin_num, 0, 1.5);
 beta_vs_p.setTitleX("p [GeV]");
 beta_vs_p.setTitleY("#beta");
 
-H2F beta_vs_p_cut = new H2F ("beta_vs_p_cut", "beta vs p cut", 100, 0, 10, 100, 0.8, 1.2);
+H2F beta_vs_p_cut = new H2F ("beta_vs_p_cut", "beta vs p cut", bin_num, 0, 10, bin_num, 0.8, 1.2);
 beta_vs_p_cut.setTitleX("p [GeV]");
 beta_vs_p_cut.setTitleY("#beta");
 
@@ -120,8 +122,8 @@ new File('.', args[0]).eachLine { line ->
     while (reader.hasEvent()) {
         DataEvent event_mc = reader.getNextEvent();
         
-        if (event_mc.getBank("RECHB::Cherenkov")){
-            DataBank bank_cher_mc = event_mc.getBank("RECHB::Cherenkov");
+        if (event_mc.getBank("REC::Cherenkov")){
+            DataBank bank_cher_mc = event_mc.getBank("REC::Cherenkov");
         
             for(int k = 0; k < bank_cher_mc.rows(); k++){
                 nphe = bank_cher_mc.getFloat("nphe", k);
@@ -132,9 +134,9 @@ new File('.', args[0]).eachLine { line ->
         }
         
         // get reconstructed MC
-        if (event_mc.hasBank("RECHB::Particle") && event_mc.hasBank("RECHB::Calorimeter") && event_mc.hasBank("REC::Traj") && event_mc.hasBank("MC::Event")) {
-            DataBank bank_rec = event_mc.getBank("RECHB::Particle");
-            DataBank bank_cal = event_mc.getBank("RECHB::Calorimeter");
+        if (event_mc.hasBank("REC::Particle") && event_mc.hasBank("REC::Calorimeter") && event_mc.hasBank("REC::Traj") && event_mc.hasBank("MC::Event")) {
+            DataBank bank_rec = event_mc.getBank("REC::Particle");
+            DataBank bank_cal = event_mc.getBank("REC::Calorimeter");
             DataBank bank_traj = event_mc.getBank("REC::Traj");
             DataBank ecal_hits = event_mc.getBank("ECAL::clusters");
             
@@ -234,6 +236,14 @@ new File('.', args[0]).eachLine { line ->
     } // end while
 } // end open file
 
+// normalization of MC
+h_eprime_mc.normalize(h_eprime_mc.integral());
+h_epcal_mc.normalize(h_epcal_mc.integral());
+h_ecin_mc.normalize(h_ecin_mc.integral());
+h_ecout_mc.normalize(h_ecout_mc.integral());
+h_ectot_mc.normalize(h_ectot_mc.integral());
+h_nphe_mc.normalize(h_nphe_mc.integral());
+
 // create for loop for all files
 // open cooked.files
 // read in line by line
@@ -276,8 +286,8 @@ new File('.', args[1]).eachLine { line ->
     while (reader.hasEvent()) {
         DataEvent event = reader.getNextEvent();
         
-        if (event.getBank("RECHB::Cherenkov")){
-            DataBank bank_cher = event.getBank("RECHB::Cherenkov");
+        if (event.getBank("REC::Cherenkov")){
+            DataBank bank_cher = event.getBank("REC::Cherenkov");
         
             for(int k = 0; k < bank_cher.rows(); k++){
                 nphe = bank_cher.getFloat("nphe", k);
@@ -287,9 +297,9 @@ new File('.', args[1]).eachLine { line ->
         }
         
         // get reconstructed data
-        if (event.hasBank("RECHB::Particle") && event.hasBank("RECHB::Calorimeter") && event.hasBank("REC::Traj")) {
-            DataBank bank_rec = event.getBank("RECHB::Particle");
-            DataBank bank_cal = event.getBank("RECHB::Calorimeter");
+        if (event.hasBank("REC::Particle") && event.hasBank("REC::Calorimeter") && event.hasBank("REC::Traj")) {
+            DataBank bank_rec = event.getBank("REC::Particle");
+            DataBank bank_cal = event.getBank("REC::Calorimeter");
             DataBank bank_traj = event.getBank("REC::Traj");
             DataBank ecal_hits = event.getBank("ECAL::clusters");
        
@@ -390,6 +400,14 @@ new File('.', args[1]).eachLine { line ->
     } // end while
 } // end open file
 
+// normalization of RGA data
+h_eprime.normalize(h_eprime.integral());
+h_epcal.normalize(h_epcal.integral());
+h_ecin.normalize(h_ecin.integral());
+h_ecout.normalize(h_ecout.integral());
+h_ectot.normalize(h_ectot.integral());
+h_nphe.normalize(h_nphe.integral());
+
 boolean dc_cut(float X, float Y, int S){
     boolean result= false;
     if( (S==3 || S==4 || S==5 || (Y>X*Math.tan(Math.PI*((S-1)/3.0-1.0/9)) && Y<X*Math.tan(Math.PI*((S-1)/3.0+1.0/9))))
@@ -399,7 +417,7 @@ boolean dc_cut(float X, float Y, int S){
 }
 
 int cal_cut_row(DataEvent event, int row){
-    DataBank bank_cal = event.getBank("RECHB::Calorimeter");
+    DataBank bank_cal = event.getBank("REC::Calorimeter");
     
     int row_index = 0;
     int cal_row_match = -1;
@@ -440,8 +458,8 @@ can.draw(h_eprime);
 can.draw(h_eprime_mc,"same");
 can.getPad().setLegend(true);
 can.getPad().setLegendPosition(20, 20);
-int ymax = h_eprime_mc.getMax();
-can.drawLine(1,0,1,ymax);
+//int ymax = h_eprime_mc.getMax();
+//can.drawLine(1,0,1,ymax);
 
 can.cd(1);
 can.draw(h_epcal);
