@@ -62,13 +62,13 @@ H2F EC_vs_PCAL_cut = new H2F("EC_vs_PCAL_cut", "EC_{tot} vs E_{pcal} cut", bin_n
 EC_vs_PCAL_cut.setTitleX("E_{PCAL} [GeV]");
 EC_vs_PCAL_cut.setTitleY("EC_{in} + EC_{out} [GeV]");
 
-H2F Etot_vs_p = new H2F("Etot_vs_p", "E_{tot}/p vs p", bin_num, 0, 8, bin_num, 0, 1);
+H2F Etot_vs_p = new H2F("Etot_vs_p", "E_{tot} vs p", bin_num, 0, 8, bin_num, 0, 1);
 Etot_vs_p.setTitleX("p [GeV]");
-Etot_vs_p.setTitleY("E_tot/p");
+Etot_vs_p.setTitleY("E_tot");
 
-H2F Etot_vs_p_cut = new H2F("Etot_vs_p_cut", "E_{tot}/p vs p cut", bin_num, 0, 8, bin_num, 0, 1);
+H2F Etot_vs_p_cut = new H2F("Etot_vs_p_cut", "E_{tot} vs p cut", bin_num, 0, 8, bin_num, 0, 1);
 Etot_vs_p_cut.setTitleX("p [GeV]");
-Etot_vs_p_cut.setTitleY("E_tot/p");
+Etot_vs_p_cut.setTitleY("E_tot");
 
 H2F beta_vs_p = new H2F ("beta_vs_p", "beta vs p", bin_num, 0, 10, bin_num, 0, 1.5);
 beta_vs_p.setTitleX("p [GeV]");
@@ -371,7 +371,7 @@ new File('.', args[1]).eachLine { line ->
                             float ec_tot = ec_in + ec_out;
                             
                             EC_vs_PCAL.fill(e_pcal, ec_tot);
-                            Etot_vs_p.fill(mom, (ec_tot+e_pcal)/mom);
+                            Etot_vs_p.fill(mom, (ec_tot+e_pcal));
                             beta_vs_p.fill(mom, beta);
                             
                             // begin cuts
@@ -389,7 +389,7 @@ new File('.', args[1]).eachLine { line ->
                             h_ectot.fill(ec_tot);
                             
                             EC_vs_PCAL_cut.fill(e_pcal, ec_tot);
-                            Etot_vs_p_cut.fill(mom, (ec_tot+e_pcal)/mom);
+                            Etot_vs_p_cut.fill(mom, (ec_tot+e_pcal));
                             beta_vs_p_cut.fill(mom, beta);
                             
                         }
@@ -504,4 +504,4 @@ can1.cd(4);
 can1.draw(Etot_vs_p_cut);
 can1.cd(5);
 can1.draw(beta_vs_p_cut);
-can1.save("figs/pid/cal_cuts.png");
+can1.save("figs/pid/cal_cuts_Etotvsp.png");
