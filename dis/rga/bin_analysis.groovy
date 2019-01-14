@@ -30,6 +30,13 @@ int bin_num = 50;
 HipoDataSource reader = new HipoDataSource();
 
 // The MC reconstructed 1D histos
+H1F Q2_bin_1_mc = new H1F("Q2_bin_1_mc", "Q2_bin_1_mc", bin_num, 0,13);
+H1F Q2_bin_2_mc = new H1F("Q2_bin_2_mc", "Q2_bin_2_mc", bin_num, 0,13);
+H1F Q2_bin_3_mc = new H1F("Q2_bin_3_mc", "Q2_bin_3_mc", bin_num, 0,13);
+H1F Q2_bin_4_mc = new H1F("Q2_bin_4_mc", "Q2_bin_4_mc", bin_num, 0,13);
+H1F Q2_bin_5_mc = new H1F("Q2_bin_5_mc", "Q2_bin_5_mc", bin_num, 0,13);
+H1F Q2_bin_6_mc = new H1F("Q2_bin_6_mc", "Q2_bin_6_mc", bin_num, 0,13);
+
 H1F W_bin_1_mc = new H1F("W_bin_1_mc", "W_bin_1_mc", bin_num, wmin, wmax+0.5);
 H1F W_bin_2_mc = new H1F("W_bin_2_mc", "W_bin_2_mc", bin_num, wmin, wmax+0.5);
 H1F W_bin_3_mc = new H1F("W_bin_3_mc", "W_bin_3_mc", bin_num, wmin, wmax+0.5);
@@ -37,9 +44,32 @@ H1F W_bin_4_mc = new H1F("W_bin_4_mc", "W_bin_4_mc", bin_num, wmin, wmax+0.5);
 H1F W_bin_5_mc = new H1F("W_bin_5_mc", "W_bin_5_mc", bin_num, wmin, wmax+0.5);
 H1F W_bin_6_mc = new H1F("W_bin_6_mc", "W_bin_6_mc", bin_num, wmin, wmax+0.5);
 
-
+H1F theta_bin_1_mc = new H1F("theta_bin_1_mc", "theta_bin_1_mc", bin_num, 0, thetamax+5);
+H1F theta_bin_2_mc = new H1F("theta_bin_2_mc", "theta_bin_2_mc", bin_num, 0, thetamax+5);
+H1F theta_bin_3_mc = new H1F("theta_bin_3_mc", "theta_bin_3_mc", bin_num, 0, thetamax+5);
+H1F theta_bin_4_mc = new H1F("theta_bin_4_mc", "theta_bin_4_mc", bin_num, 0, thetamax+5);
+H1F theta_bin_5_mc = new H1F("theta_bin_5_mc", "theta_bin_5_mc", bin_num, 0, thetamax+5);
+H1F theta_bin_6_mc = new H1F("theta_bin_6_mc", "theta_bin_6_mc", bin_num, 0, thetamax+5);
 
 // The reconstructed 1D histos 
+H1F Q2_bin_1 = new H1F("Q2_bin_1", "Q2_bin_1", bin_num, 0, 13);
+Q2_bin_1.setTitleX("Q2 [GeV^{2}]");
+
+H1F Q2_bin_2 = new H1F("Q2_bin_2", "Q2_bin_2", bin_num, 0, 13);
+Q2_bin_2.setTitleX("Q2 [GeV^{2}]");
+
+H1F Q2_bin_3 = new H1F("Q2_bin_3", "Q2_bin_3", bin_num, 0, 13);
+Q2_bin_3.setTitleX("Q2 [GeV^{2}]");
+
+H1F Q2_bin_4 = new H1F("Q2_bin_4", "Q2_bin_4", bin_num, 0, 13);
+Q2_bin_4.setTitleX("Q2 [GeV^{2}]");
+
+H1F Q2_bin_5 = new H1F("Q2_bin_5", "Q2_bin_5", bin_num, 0, 13);
+Q2_bin_5.setTitleX("Q2 [GeV^{2}]");
+
+H1F Q2_bin_6 = new H1F("Q2_bin_6", "Q2_bin_6", bin_num, 0, 13);
+Q2_bin_6.setTitleX("Q2 [GeV^{2}]");
+
 H1F W_bin_1 = new H1F("W_bin_1", "W_bin_1", bin_num, wmin, wmax+0.5);
 W_bin_1.setTitleX("W [GeV]");
 
@@ -57,6 +87,25 @@ W_bin_5.setTitleX("W [GeV]");
 
 H1F W_bin_6 = new H1F("W_bin_6", "W_bin_6", bin_num, wmin, wmax+0.5);
 W_bin_6.setTitleX("W [GeV]");
+
+H1F theta_bin_1 = new H1F("theta_bin_1", "theta_bin_1", bin_num, 0,thetamax+5);
+theta_bin_1.setTitleX("theta [deg]");
+
+H1F theta_bin_2 = new H1F("theta_bin_2", "theta_bin_2", bin_num, 0,thetamax+5);
+theta_bin_2.setTitleX("theta [deg]");
+
+H1F theta_bin_3 = new H1F("theta_bin_3", "theta_bin_3", bin_num, 0,thetamax+5);
+theta_bin_3.setTitleX("theta [deg]");
+
+H1F theta_bin_4 = new H1F("theta_bin_4", "theta_bin_4", bin_num, 0,thetamax+5);
+theta_bin_4.setTitleX("theta [deg]");
+
+H1F theta_bin_5 = new H1F("theta_bin_5", "theta_bin_5", bin_num, 0,thetamax+5);
+theta_bin_5.setTitleX("theta [deg]");
+
+H1F theta_bin_6 = new H1F("theta_bin_6", "theta_bin_6", bin_num, 0,thetamax+5);
+theta_bin_6.setTitleX("theta [deg]");
+
 
 
 double e_mass = 0.000511;
@@ -164,29 +213,53 @@ new File('.', args[0]).eachLine { line ->
                     
                     if(lu < 350 && lu > 60 && lv < 370 && lw < 390){
                         // binning
-                        if(xB_mc < 0.15 && Q2_mc < 2){
+                        if(xB_mc < 0.15){ // && Q2_mc < 2){
+                            Q2_bin_1_mc.fill(Q2_mc);
+                            Q2_bin_1_mc.setLineColor(3); 
                             W_bin_1_mc.fill(W_mc);
                             W_bin_1_mc.setLineColor(3); 
+                            theta_bin_1_mc.fill(theta_mc);
+                            theta_bin_1_mc.setLineColor(3);
                         }
-                        if(xB_mc > 0.15 && xB_mc < 0.2 && Q2_mc > 2 && Q2_mc < 2.5){
+                        if(xB_mc > 0.15 && xB_mc < 0.2){ // && Q2_mc > 2 && Q2_mc < 2.5){
+                            Q2_bin_2_mc.fill(Q2_mc);
+                            Q2_bin_2_mc.setLineColor(3);
                             W_bin_2_mc.fill(W_mc);
                             W_bin_2_mc.setLineColor(3);
+                            theta_bin_2_mc.fill(theta_mc);
+                            theta_bin_2_mc.setLineColor(3);
                         }
-                        if(xB_mc > 0.2 && xB_mc < 0.27 && Q2_mc > 2.5 && Q2_mc < 3){
+                        if(xB_mc > 0.2 && xB_mc < 0.27){ // && Q2_mc > 2.5 && Q2_mc < 3){
+                            Q2_bin_3_mc.fill(Q2_mc);
+                            Q2_bin_3_mc.setLineColor(3);
                             W_bin_3_mc.fill(W_mc);
                             W_bin_3_mc.setLineColor(3);
+                            theta_bin_3_mc.fill(theta_mc);
+                            theta_bin_3_mc.setLineColor(3);
                         }
-                        if(xB_mc > 0.27 && xB_mc < 0.4 && Q2_mc > 3 && Q2_mc < 3.75){
+                        if(xB_mc > 0.27 && xB_mc < 0.4){ // && Q2_mc > 3 && Q2_mc < 3.75){
+                            Q2_bin_4_mc.fill(Q2_mc);
+                            Q2_bin_4_mc.setLineColor(3);
                             W_bin_4_mc.fill(W_mc);
                             W_bin_4_mc.setLineColor(3);
+                            theta_bin_4_mc.fill(theta_mc);
+                            theta_bin_4_mc.setLineColor(3);
                         }
-                        if(xB_mc > 0.4 && xB_mc < 0.6 && Q2_mc > 3.75 && Q2_mc < 4.5){
+                        if(xB_mc > 0.4 && xB_mc < 0.6){ // && Q2_mc > 3.75 && Q2_mc < 4.5){
+                            Q2_bin_5_mc.fill(Q2_mc);
+                            Q2_bin_5_mc.setLineColor(3);
                             W_bin_5_mc.fill(W_mc);
                             W_bin_5_mc.setLineColor(3);
+                            theta_bin_5_mc.fill(theta_mc);
+                            theta_bin_5_mc.setLineColor(3);
                         }
-                        if(xB_mc > 0.6 && Q2_mc > 4.5){
+                        if(xB_mc > 0.6){ // && Q2_mc > 4.5){
+                            Q2_bin_6_mc.fill(Q2_mc);
+                            Q2_bin_6_mc.setLineColor(3);
                             W_bin_6_mc.fill(W_mc);
                             W_bin_6_mc.setLineColor(3);
+                            theta_bin_6_mc.fill(theta_mc);
+                            theta_bin_6_mc.setLineColor(3);
                         }
                     }
                 }
@@ -197,12 +270,24 @@ new File('.', args[0]).eachLine { line ->
 } // end open MC data file
 
 // normalization of MC histos
+Q2_bin_1_mc.normalize(Q2_bin_1_mc.integral());
+Q2_bin_2_mc.normalize(Q2_bin_2_mc.integral());
+Q2_bin_3_mc.normalize(Q2_bin_3_mc.integral());
+Q2_bin_4_mc.normalize(Q2_bin_4_mc.integral());
+Q2_bin_5_mc.normalize(Q2_bin_5_mc.integral());
+Q2_bin_6_mc.normalize(Q2_bin_6_mc.integral());
 W_bin_1_mc.normalize(W_bin_1_mc.integral());
 W_bin_2_mc.normalize(W_bin_2_mc.integral());
 W_bin_3_mc.normalize(W_bin_3_mc.integral());
 W_bin_4_mc.normalize(W_bin_4_mc.integral());
 W_bin_5_mc.normalize(W_bin_5_mc.integral());
 W_bin_6_mc.normalize(W_bin_6_mc.integral());
+theta_bin_1_mc.normalize(theta_bin_1_mc.integral());
+theta_bin_2_mc.normalize(theta_bin_2_mc.integral());
+theta_bin_3_mc.normalize(theta_bin_3_mc.integral());
+theta_bin_4_mc.normalize(theta_bin_4_mc.integral());
+theta_bin_5_mc.normalize(theta_bin_5_mc.integral());
+theta_bin_6_mc.normalize(theta_bin_6_mc.integral());
 
 // open the RGA data file
 new File('.', args[1]).eachLine { line ->
@@ -322,23 +407,35 @@ new File('.', args[1]).eachLine { line ->
                     if(lu < 350 && lu > 60 && lv < 370 && lw < 390){
                         
                         // binning
-                        if(xB < 0.15 && Q2 < 2){
+                        if(xB < 0.15){ // && Q2 < 2){
+                            Q2_bin_1.fill(Q2);
                             W_bin_1.fill(W);
+                            theta_bin_1.fill(theta);
                         }
-                        if(xB > 0.15 && xB < 0.2 && Q2 > 2 && Q2 < 2.5){
+                        if(xB > 0.15 && xB < 0.2){ // && Q2 > 2 && Q2 < 2.5){
+                            Q2_bin_2.fill(Q2);
                             W_bin_2.fill(W);
+                            theta_bin_2.fill(theta);
                         }
-                        if(xB > 0.2 && xB < 0.27 && Q2 > 2.5 && Q2 < 3){
+                        if(xB > 0.2 && xB < 0.27){ // && Q2 > 2.5 && Q2 < 3){
+                            Q2_bin_3.fill(Q2);
                             W_bin_3.fill(W);
+                            theta_bin_3.fill(theta);
                         }
-                        if(xB > 0.27 && xB < 0.4 && Q2 > 3 && Q2 < 3.75){
+                        if(xB > 0.27 && xB < 0.4){ // && Q2 > 3 && Q2 < 3.75){
+                            Q2_bin_4.fill(Q2);
                             W_bin_4.fill(W);
+                            theta_bin_4.fill(theta);
                         }
-                        if(xB > 0.4 && xB < 0.6 && Q2 > 3.75 && Q2 < 4.5){
+                        if(xB > 0.4 && xB < 0.6){ // && Q2 > 3.75 && Q2 < 4.5){
+                            Q2_bin_5.fill(Q2);
                             W_bin_5.fill(W);
+                            theta_bin_5.fill(theta);
                         }
-                        if(xB > 0.6 && Q2 > 4.5){
+                        if(xB > 0.6){ // && Q2 > 4.5){
+                            Q2_bin_6.fill(Q2);
                             W_bin_6.fill(W);
+                            theta_bin_6.fill(theta);
                         }
                     }
                 }
@@ -364,12 +461,24 @@ new File('.', args[1]).eachLine { line ->
 } // end open file
 
 // normalization of RGA histograms
+Q2_bin_1.normalize(Q2_bin_1.integral());
+Q2_bin_2.normalize(Q2_bin_2.integral());
+Q2_bin_3.normalize(Q2_bin_3.integral());
+Q2_bin_4.normalize(Q2_bin_4.integral());
+Q2_bin_5.normalize(Q2_bin_5.integral());
+Q2_bin_6.normalize(Q2_bin_6.integral());
 W_bin_1.normalize(W_bin_1.integral());
 W_bin_2.normalize(W_bin_2.integral());
 W_bin_3.normalize(W_bin_3.integral());
 W_bin_4.normalize(W_bin_4.integral());
 W_bin_5.normalize(W_bin_5.integral());
 W_bin_6.normalize(W_bin_6.integral());
+theta_bin_1.normalize(theta_bin_1.integral());
+theta_bin_2.normalize(theta_bin_2.integral());
+theta_bin_3.normalize(theta_bin_3.integral());
+theta_bin_4.normalize(theta_bin_4.integral());
+theta_bin_5.normalize(theta_bin_5.integral());
+theta_bin_6.normalize(theta_bin_6.integral());
 
 boolean dc_cut(float X, float Y, int S){
     boolean result= false;
@@ -447,3 +556,73 @@ can_1d_a.draw(W_bin_6_mc,"same");
 can_1d_a.getPad().setLegend(true);
 can_1d_a.getPad().setLegendPosition(20, 20);
 can_1d_a.save("figs/bins/W_binned.png");
+
+TCanvas can_1d_b = new TCanvas("can", 1100, 600);
+can_1d_b.setTitle("theta binned");
+can_1d_b.divide(3,2);
+can_1d_b.cd(0);
+can_1d_b.draw(theta_bin_1);
+can_1d_b.draw(theta_bin_1_mc,"same");
+can_1d_b.getPad().setLegend(true);
+can_1d_b.getPad().setLegendPosition(20, 20);
+can_1d_b.cd(1);
+can_1d_b.draw(theta_bin_2);
+can_1d_b.draw(theta_bin_2_mc,"same");
+can_1d_b.getPad().setLegend(true);
+can_1d_b.getPad().setLegendPosition(20, 20);
+can_1d_b.cd(2);
+can_1d_b.draw(theta_bin_3);
+can_1d_b.draw(theta_bin_3_mc,"same");
+can_1d_b.getPad().setLegend(true);
+can_1d_b.getPad().setLegendPosition(20, 20);
+can_1d_b.cd(3);
+can_1d_b.draw(theta_bin_4);
+can_1d_b.draw(theta_bin_4_mc,"same");
+can_1d_b.getPad().setLegend(true);
+can_1d_b.getPad().setLegendPosition(20, 20);
+can_1d_b.cd(4);
+can_1d_b.draw(theta_bin_5);
+can_1d_b.draw(theta_bin_5_mc,"same");
+can_1d_b.getPad().setLegend(true);
+can_1d_b.getPad().setLegendPosition(20, 20);
+can_1d_b.cd(5);
+can_1d_b.draw(theta_bin_6);
+can_1d_b.draw(theta_bin_6_mc,"same");
+can_1d_b.getPad().setLegend(true);
+can_1d_b.getPad().setLegendPosition(20, 20);
+can_1d_b.save("figs/bins/theta_binned.png");
+
+TCanvas can_1d_c = new TCanvas("can", 1100, 600);
+can_1d_c.setTitle("Q2 binned");
+can_1d_c.divide(3,2);
+can_1d_c.cd(0);
+can_1d_c.draw(Q2_bin_1);
+can_1d_c.draw(Q2_bin_1_mc,"same");
+can_1d_c.getPad().setLegend(true);
+can_1d_c.getPad().setLegendPosition(20, 20);
+can_1d_c.cd(1);
+can_1d_c.draw(Q2_bin_2);
+can_1d_c.draw(Q2_bin_2_mc,"same");
+can_1d_c.getPad().setLegend(true);
+can_1d_c.getPad().setLegendPosition(20, 20);
+can_1d_c.cd(2);
+can_1d_c.draw(Q2_bin_3);
+can_1d_c.draw(Q2_bin_3_mc,"same");
+can_1d_c.getPad().setLegend(true);
+can_1d_c.getPad().setLegendPosition(20, 20);
+can_1d_c.cd(3);
+can_1d_c.draw(Q2_bin_4);
+can_1d_c.draw(Q2_bin_4_mc,"same");
+can_1d_c.getPad().setLegend(true);
+can_1d_c.getPad().setLegendPosition(20, 20);
+can_1d_c.cd(4);
+can_1d_c.draw(Q2_bin_5);
+can_1d_c.draw(Q2_bin_5_mc,"same");
+can_1d_c.getPad().setLegend(true);
+can_1d_c.getPad().setLegendPosition(20, 20);
+can_1d_c.cd(5);
+can_1d_c.draw(Q2_bin_6);
+can_1d_c.draw(Q2_bin_6_mc,"same");
+can_1d_c.getPad().setLegend(true);
+can_1d_c.getPad().setLegendPosition(20, 20);
+can_1d_c.save("figs/bins/Q2_binned.png");

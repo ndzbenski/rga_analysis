@@ -21,105 +21,107 @@ if(en > 7){wmax = 4.5;}
 else if(en > 4){wmax = 4;}
 else {wmax = 2.5;}
 
+int bin_num = 50;
+
 HipoDataSource reader = new HipoDataSource();
 
 // The reconstructed 1D histos 
-H1F theta_hist = new H1F("theta", "theta", 50, 0, thetamax+5);
+H1F theta_hist = new H1F("theta", "theta", bin_num, 0, thetamax+5);
 theta_hist.setTitleX("theta [deg]");
 
-H1F phi_hist = new H1F("phi", "phi", 100, -phimax, phimax);
+H1F phi_hist = new H1F("phi", "phi", bin_num, -phimax, phimax);
 phi_hist.setTitleX("phi [deg]");
 
-H1F momentum = new H1F("momentum", "momentum", 20, 0, 11);
+H1F momentum = new H1F("momentum", "momentum", bin_num, 0, 11);
 momentum.setTitleX("momentum [GeV]");
 
-H1F W_hist = new H1F("W", "W", 100, wmin, wmax+0.5);
+H1F W_hist = new H1F("W", "W", bin_num, wmin, wmax+0.5);
 W_hist.setTitleX("W [GeV]");
 
-H1F Q2_hist = new H1F("Q2", "Q2", 50, 0, 13);
+H1F Q2_hist = new H1F("Q2", "Q2", bin_num, 0, 13);
 Q2_hist.setTitleX("Q^2 [GeV^2]");
 
-H1F Eprime_hist = new H1F("Eprime", "E'", 50, 0, 13);
+H1F Eprime_hist = new H1F("Eprime", "E'", bin_num, 0, 13);
 Eprime_hist.setTitleX("E' [GeV]");
 
-H1F xB_hist = new H1F("xB", "xB", 20, 0, 1);
+H1F xB_hist = new H1F("xB", "xB", bin_num, 0, 1);
 xB_hist.setTitleX("xB");
 
 // Create multiple histograms for each Q2 bin 
 HashMap<Integer,H1F> xB_histmap = new HashMap<Integer,H1F>();
 for(int i = 0; i < 8; i++){xB_histmap.put(i,new H1F("xB", 100, 0, 0.9));}
 
-H1F xsection_hist = new H1F("xsection", "Generating Cross Section (#sigma)", 100, 0, 1);
+H1F xsection_hist = new H1F("xsection", "Generating Cross Section (#sigma)", bin_num, 0, 1);
 xsection_hist.setTitleX("#sigma_{gen}");
 
 
 // The 1D histos cuts
-H1F theta_hist_cut = new H1F("theta_cut", "theta_cut", 50, 0, thetamax+5);
+H1F theta_hist_cut = new H1F("theta_cut", "theta_cut", bin_num, 0, thetamax+5);
 theta_hist_cut.setTitleX("theta [deg]");
 
-H1F phi_hist_cut = new H1F("phi_cut", "phi_cut", 100, -phimax, phimax);
+H1F phi_hist_cut = new H1F("phi_cut", "phi_cut", bin_num, -phimax, phimax);
 phi_hist_cut.setTitleX("phi [deg]");
 
-H1F mom_hist_cut = new H1F("momentum_cut", "momentum_cut", 20, 0, 11);
+H1F mom_hist_cut = new H1F("momentum_cut", "momentum_cut", bin_num, 0, 11);
 mom_hist_cut.setTitleX("p [GeV]");
 
-H1F W_hist_cut = new H1F("W_cut", "W_cut", 100, wmin, wmax+0.5);
+H1F W_hist_cut = new H1F("W_cut", "W_cut", bin_num, wmin, wmax+0.5);
 W_hist_cut.setTitleX("W_cut [GeV]");
 
-H1F Q2_hist_cut = new H1F("Q2_cut", "Q2_cut", 100, 0, 13);
+H1F Q2_hist_cut = new H1F("Q2_cut", "Q2_cut", bin_num, 0, 13);
 Q2_hist_cut.setTitleX("Q^2_cut [GeV^2]");
 
-H1F xB_hist_cut = new H1F("xB_cut", "xB_cut", 20, 0, 1);
+H1F xB_hist_cut = new H1F("xB_cut", "xB_cut", bin_num, 0, 1);
 xB_hist_cut.setTitleX("xB_cut");
 
 
 // 2D Histos
-H2F Q2_vs_W = new H2F("Q2_vs_W", "Q2 vs W", 100, wmin, wmax+0.5, 100, 0.0, 13);
+H2F Q2_vs_W = new H2F("Q2_vs_W", "Q2 vs W", bin_num, wmin, wmax+0.5, bin_num, 0.0, 13);
 Q2_vs_W.setTitleX("W [GeV]");
 Q2_vs_W.setTitleY("Q^2 [GeV^2]");
 
-H2F E_vs_Theta = new H2F("E_vs_Theta", "E' vs Theta", 100, 5, thetamax+5, 100, 0, enmax);
+H2F E_vs_Theta = new H2F("E_vs_Theta", "E' vs Theta", bin_num, 5, thetamax+5, bin_num, 0, enmax);
 E_vs_Theta.setTitleX("Theta [deg]");
 E_vs_Theta.setTitleY("E' [GeV]");
 
-H2F Q2_vs_xB = new H2F("Q2_vs_xB", "Q2 vs xB", 100, 0, 1, 100, 0, 13);
+H2F Q2_vs_xB = new H2F("Q2_vs_xB", "Q2 vs xB", bin_num, 0, 1, bin_num, 0, 13);
 Q2_vs_xB.setTitleX("xB");
 Q2_vs_xB.setTitleY("Q^2 [GeV^2]");
 
-H2F W_vs_xB = new H2F("W_vs_xB", "W vs xB", 100, 0, 0.81, 100, wmin, wmax+0.5);
+H2F W_vs_xB = new H2F("W_vs_xB", "W vs xB", bin_num, 0, 0.81, bin_num, wmin, wmax+0.5);
 W_vs_xB.setTitleX("xB");
 W_vs_xB.setTitleY("W [GeV]");
 
-H2F Phi_vs_W = new H2F("Phi_vs_W", "Phi_vs_W", 150, wmin, wmax, 500, -phimax, phimax);
+H2F Phi_vs_W = new H2F("Phi_vs_W", "Phi_vs_W", bin_num, wmin, wmax, bin_num, -phimax, phimax);
 Phi_vs_W.setTitleX("W [GeV]");
 Phi_vs_W.setTitleY("Phi [deg]");
 
-H2F xsect_vs_xB = new H2F("xsect_vs_xB", "generating #sigma vs xB", 150, 0.0, 0.81, 150, -1, 150);
+H2F xsect_vs_xB = new H2F("xsect_vs_xB", "generating #sigma vs xB", bin_num, 0.0, 0.81, bin_num, -1, 150);
 xsect_vs_xB.setTitleX("xB");
 xsect_vs_xB.setTitleY("#sigma");
 
 
 // For pre-fiducial cuts
-H2F Cal_y_vs_x_precut = new H2F("Cal_y_vs_x_precut", "Cal_y_vs_x_precut", 100, -450,450, 100, -450,450);
+H2F Cal_y_vs_x_precut = new H2F("Cal_y_vs_x_precut", "Cal_y_vs_x_precut", bin_num, -450,450, bin_num, -450,450);
 Cal_y_vs_x_precut.setTitleX("X [cm]");
 Cal_y_vs_x_precut.setTitleY("Y [cm]");
 
-H1F Cal_lu_precut = new H1F("Cal_lu", "Cal_lu_precut", 50, 0, 450);
+H1F Cal_lu_precut = new H1F("Cal_lu", "Cal_lu_precut", bin_num, 0, 450);
 Cal_lu_precut.setTitleX("Cal_lu_precut [cm]");
-H1F Cal_lv_precut = new H1F("Cal_lv", "Cal_lv_precut", 50, 0, 450);
+H1F Cal_lv_precut = new H1F("Cal_lv", "Cal_lv_precut", bin_num, 0, 450);
 Cal_lv_precut.setTitleX("Cal_lv_precut [cm]");
-H1F Cal_lw_precut = new H1F("Cal_lw", "Cal_lw_precut", 50, 0, 450);
+H1F Cal_lw_precut = new H1F("Cal_lw", "Cal_lw_precut", bin_num, 0, 450);
 Cal_lw_precut.setTitleX("Cal_lw_precut [cm]");
 
 // fiducial cuts
-H1F Cal_lu = new H1F("Cal_lu", "Cal_lu", 50, 0, 450);
+H1F Cal_lu = new H1F("Cal_lu", "Cal_lu", bin_num, 0, 450);
 Cal_lu.setTitleX("Cal_lu_cut [cm]");
-H1F Cal_lv = new H1F("Cal_lv", "Cal_lv", 50, 0, 450);
+H1F Cal_lv = new H1F("Cal_lv", "Cal_lv", bin_num, 0, 450);
 Cal_lv.setTitleX("Cal_lv_cut [cm]");
-H1F Cal_lw = new H1F("Cal_lw", "Cal_lw", 50, 0, 450);
+H1F Cal_lw = new H1F("Cal_lw", "Cal_lw", bin_num, 0, 450);
 Cal_lw.setTitleX("Cal_lw_cut [cm]");
 
-H2F Cal_y_vs_x = new H2F("Cal_y_vs_x", "Cal_y_vs_x", 100, -450,450, 100, -450, 450);
+H2F Cal_y_vs_x = new H2F("Cal_y_vs_x", "Cal_y_vs_x", bin_num, -450,450, bin_num, -450, 450);
 Cal_y_vs_x.setTitleX("X [cm]");
 Cal_y_vs_x.setTitleY("Y [cm]");
 
@@ -213,6 +215,33 @@ new File('.', args[0]).eachLine { line ->
                 LorentzVector e_vec_prime = new LorentzVector(); //4 vector e'
                 e_vec_prime.setVectM(e_vec_3, e_mass);
     
+                LorentzVector q_vec = new LorentzVector(); //4 vector q
+                q_vec.copy(e_vec); //e - e'
+                q_vec.sub(e_vec_prime);
+                Q2 = -q_vec.mass2(); //-q^2
+                
+                LorentzVector w_vec = new LorentzVector(); //4 vector used to calculate W
+                w_vec.copy(p_vec); //p + q
+                w_vec.add(q_vec);
+                W = w_vec.mass();
+                //double W = p_mass*p_mass + 2.0*p_mass*(en-E_prime) -Q2
+    
+                //double E_prime = Q2/(4.0*en*(Math.sin(theta*Math.PI/360.0)));
+                E_prime = e_vec_prime.e();
+                xB = Q2/(2.0*p_mass*(en-E_prime));
+                
+                // Fill histos
+                theta_hist.fill(theta);
+                phi_hist.fill(phi);
+                momentum.fill(mom);
+                
+                W_hist.fill(W);
+                Q2_hist.fill(Q2, weight);
+                xB_hist.fill(xB, weight);
+                
+                xsection_hist.fill(weight);
+                Eprime_hist.fill(E_prime);
+                
                 // ---------------- Cut on E' and theta -------------------
                 //if(e_vec_prime.e() < 0.1 * en){continue;}  //cut below 10% beam
                 //if(theta < 5 || theta > 40){continue;}     //cut outside of 5 and 40 degrees for FD
@@ -240,6 +269,24 @@ new File('.', args[0]).eachLine { line ->
                         Cal_lv.fill(lv);
                         Cal_lw.fill(lw);
                         Cal_y_vs_x.fill(x_cal,y_cal);
+                        
+                        // begin cuts
+                        if (theta < 5 || theta > 40 || W < 2 || E_prime < 0.1*en ||Q2 < 1) {continue; }
+                        
+                        theta_hist_cut.fill(theta);
+                        phi_hist_cut.fill(phi);
+                        mom_hist_cut.fill(mom);
+                            
+                        W_hist_cut.fill(W);
+                        Q2_hist_cut.fill(Q2, weight);
+                        xB_hist_cut.fill(xB, weight);
+                        
+                        Q2_vs_W.fill(W,Q2);
+                        Phi_vs_W.fill(W,phi);
+                        E_vs_Theta.fill(theta,e_vec_prime.e()); // check this with calculated E'
+                        Q2_vs_xB.fill(xB,Q2);
+                        W_vs_xB.fill(xB,W);
+                        xsect_vs_xB.fill(xB,weight);
                     }
                 }
                 
@@ -258,28 +305,6 @@ new File('.', args[0]).eachLine { line ->
                     
                 }
 
-                momentum.fill(mom);
-                LorentzVector q_vec = new LorentzVector(); //4 vector q
-                q_vec.copy(e_vec); //e - e'
-                q_vec.sub(e_vec_prime);
-                Q2 = -q_vec.mass2(); //-q^2
-                
-                LorentzVector w_vec = new LorentzVector(); //4 vector used to calculate W
-                w_vec.copy(p_vec); //p + q
-                w_vec.add(q_vec);
-                W = w_vec.mass();
-                //double W = p_mass*p_mass + 2.0*p_mass*(en-E_prime) -Q2
-    
-                //double E_prime = Q2/(4.0*en*(Math.sin(theta*Math.PI/360.0)));
-                E_prime = e_vec_prime.e();
-                xB = Q2/(2.0*p_mass*(en-E_prime));
-                
-                xB_hist.fill(xB, weight);
-                
-                // Fill histos
-                Q2_hist.fill(Q2, weight);
-                Eprime_hist.fill(E_prime);
-                
                 // xB histograms binned in 1 GeV^2 Q2
                 for(int j = 0; j < 8; j++){
                     Q2_bin_min = 0;
@@ -291,37 +316,11 @@ new File('.', args[0]).eachLine { line ->
                     else {continue;}
                 }
                 
-                W_hist.fill(W);
-                xsection_hist.fill(weight);
-                theta_hist.fill(theta);
-                phi_hist.fill(phi);
-                
                 // Calculate max values of each param
                 if(e_vec_prime.e()>emax){emax = e_vec_prime.e();} 
                 if(theta > thetamax){thetamax = theta;}
                 if(phi > phimax){phimax = phi;}
                 if(vz > vzmax){vzmax = vz;}
-                
-                // begin cuts
-                if (theta < 5 || theta > 40) {
-                if (W < 2) {
-                if (E_prime < 0.1*en) {
-                if (Q2 < 1) { System.out.println(xB); } } } }
-                
-                theta_hist_cut.fill(theta);
-                phi_hist_cut.fill(phi);
-                mom_hist_cut.fill(mom);
-                    
-                W_hist_cut.fill(W);
-                Q2_hist_cut.fill(Q2, weight);
-                xB_hist_cut.fill(xB, weight);
-                
-                Q2_vs_W.fill(W,Q2);
-                Phi_vs_W.fill(W,phi);
-                E_vs_Theta.fill(theta,e_vec_prime.e()); // check this with calculated E'
-                Q2_vs_xB.fill(xB,Q2);
-                W_vs_xB.fill(xB,W);
-                xsect_vs_xB.fill(xB,weight);
                 
             } // end for
         } // end if    
@@ -338,7 +337,7 @@ boolean dc_cut(float X, float Y, int S){
 }
 
 int cal_cut_row(DataEvent event, int row){
-    DataBank bank_cal = event.getBank("RECHB::Calorimeter");
+    DataBank bank_cal = event.getBank("REC::Calorimeter");
     
     int row_index = 0;
     int cal_row_match = -1;
